@@ -1,94 +1,96 @@
+#define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
-#include <iostream>
+#include <SDL3/SDL_main.h>
+
+static SDL_Window *window = NULL;
+static SDL_Renderer *renderer = NULL;
 
 // Configuration
-const int WINDOW_WIDTH = 840;
-const int WINDOW_HEIGHT = 840;
-const int FPS = 60;
+const int WIDTH = 840;
+const int HEIGHT = 840;
+const int FPS = 100;
 
 // Derived
 const int FRAME_DELAY = 1e9 / FPS;
 
-struct SDLContext {
-    SDL_Window *window;
-    SDL_Surface *surface;
-};
+SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
+    SDL_SetAppMetadata("Tri-GoL", "0.1", "dev.dominictdavies.trigol");
 
-SDLContext setupSDL() {
-    // Pointers to our window and surface
-    SDL_Window *window = NULL;
-    SDL_Surface *surface = NULL;
-
-    // Initialize SDL, SDL_Init will return false if it fails
     if (!SDL_Init(SDL_INIT_VIDEO)) {
-        std::cout << "Error initializing SDL: " << SDL_GetError() << std::endl;
-        exit(EXIT_FAILURE);
+        SDL_Log("Couldn't initialise SDL: %s", SDL_GetError());
+        return SDL_APP_FAILURE;
     }
 
-    // Create our window
-    window = SDL_CreateWindow("Tri-GoL", WINDOW_WIDTH, WINDOW_HEIGHT, 0);
-
-    // Make sure creating the window succeeded
-    if (!window) {
-        std::cout << "Error creating window: " << SDL_GetError() << std::endl;
-        exit(EXIT_FAILURE);
+    if (!SDL_CreateWindowAndRenderer("Tri-GoL", WIDTH, HEIGHT, 0, &window,
+                                     &renderer)) {
+        SDL_Log("Couldn't create window/renderer: %s", SDL_GetError());
+        return SDL_APP_FAILURE;
     }
 
-    // Get the surface from the window
-    surface = SDL_GetWindowSurface(window);
+    SDL_SetRenderLogicalPresentation(renderer, WIDTH, HEIGHT,
+                                     SDL_LOGICAL_PRESENTATION_LETTERBOX);
 
-    // Make sure getting the surface succeeded
-    if (!surface) {
-        std::cout << "Error getting surface: " << SDL_GetError() << std::endl;
-        exit(EXIT_FAILURE);
-    }
-
-    return {window, surface};
+    return SDL_APP_CONTINUE;
 }
 
-bool eventLoop(SDLContext sdl) {
-    SDL_Event event;
-
-    while (SDL_PollEvent(&event)) {
-        switch (event.type) {
-        case SDL_EVENT_QUIT:
-            return false;
-            break;
-        }
+SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event) {
+    if (event->type == SDL_EVENT_QUIT) {
+        return SDL_APP_SUCCESS;
     }
-
-    return true;
+    return SDL_APP_CONTINUE;
 }
 
-void drawFrame(SDLContext sdl) {
-    // Fill the window with a colour
-    SDL_FillSurfaceRect(sdl.surface, NULL,
-                        SDL_MapSurfaceRGB(sdl.surface, 0, 0, 0));
+/* This function runs once per frame, and is the heart of the program. */
+SDL_AppResult SDL_AppIterate(void *appstate) {
+    int i;
 
-    // Update the window display
-    SDL_UpdateWindowSurface(sdl.window);
+    /* Lines (line segments, really) are drawn in terms of points: a set of
+       X and Y coordinates, one set for each end of the line.
+       (0, 0) is the top left of the window, and larger numbers go down
+       and to the right. This isn't how geometry works, but this is pretty
+       standard in 2D graphics. */
+    static const SDL_FPoint line_points[] = {
+        {100, 354}, {220, 230}, {140, 230}, {320, 100}, {500, 230},
+        {420, 230}, {540, 354}, {400, 354}, {100, 354}};
+
+    /* as you can see from this, rendering draws over whatever was drawn before
+     * it. */
+    SDL_SetRenderDrawColor(renderer, 100, 100, 100,
+                           SDL_ALPHA_OPAQUE); /* grey, full alpha */
+    SDL_RenderClear(renderer);                /* start with a blank canvas. */
+
+    /* You can draw lines, one at a time, like these brown ones... */
+    SDL_SetRenderDrawColor(renderer, 127, 49, 32, SDL_ALPHA_OPAQUE);
+    SDL_RenderLine(renderer, 240, 450, 400, 450);
+    SDL_RenderLine(renderer, 240, 356, 400, 356);
+    SDL_RenderLine(renderer, 240, 356, 240, 450);
+    SDL_RenderLine(renderer, 400, 356, 400, 450);
+
+    /* You can also draw a series of connected lines in a single batch... */
+    SDL_SetRenderDrawColor(renderer, 0, 255, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderLines(renderer, line_points, SDL_arraysize(line_points));
+
+    /* here's a bunch of lines drawn out from a center point in a circle. */
+    /* we randomize the color of each line, so it functions as animation. */
+    for (i = 0; i < 360; i++) {
+        const float size = 30.0f;
+        const float x = 320.0f;
+        const float y = 95.0f - (size / 2.0f);
+        SDL_SetRenderDrawColor(renderer, SDL_rand(256), SDL_rand(256),
+                               SDL_rand(256), SDL_ALPHA_OPAQUE);
+        SDL_RenderLine(renderer, x, y, x + SDL_sinf((float)i) * size,
+                       y + SDL_cosf((float)i) * size);
+    }
+
+    SDL_RenderPresent(renderer); /* put it all on the screen! */
 
     // Wait before next frame
     SDL_DelayPrecise(FRAME_DELAY);
+
+    return SDL_APP_CONTINUE; /* carry on with the program! */
 }
 
-void closeSDL(SDLContext sdl) {
-    // Destroy the window, also destroys the surface
-    SDL_DestroyWindow(sdl.window);
-
-    // Quit SDL
-    SDL_Quit();
-}
-
-int main() {
-    auto sdl = setupSDL();
-
-    bool running = true;
-    while (running) {
-        running = eventLoop(sdl);
-        drawFrame(sdl);
-    }
-
-    closeSDL(sdl);
-    return EXIT_SUCCESS;
+/* This function runs once at shutdown. */
+void SDL_AppQuit(void *appstate, SDL_AppResult result) {
+    /* SDL will clean up the window/renderer for us. */
 }
