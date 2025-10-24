@@ -83,5 +83,7 @@ int main() {
         SDL_Delay(FRAME_DELAY);
     }
 
+    closeSDL(sdl);
+
     return EXIT_SUCCESS;
 }
