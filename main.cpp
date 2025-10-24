@@ -43,11 +43,6 @@ int main() {
     SDL_Event event;
     bool running = true;
 
-    uint8_t red = 0;
-    uint8_t green = 0;
-    uint8_t blue = 0;
-    bool will_brighten = true;
-
     // Main loop
     while (running) {
         while (SDL_PollEvent(&event)) {
@@ -59,34 +54,10 @@ int main() {
         }
 
         // Fill the window with a coloured rectangle
-        SDL_FillRect(winSurface, NULL,
-                     SDL_MapRGB(winSurface->format, red, green, blue));
+        SDL_FillRect(winSurface, NULL, SDL_MapRGB(winSurface->format, 0, 0, 0));
 
         // Update the window display
         SDL_UpdateWindowSurface(window);
-
-        // Adjust colour values
-        if (will_brighten) {
-            if (red < 255) {
-                red += 1;
-            } else if (green < 255) {
-                green += 1;
-            } else if (blue < 255) {
-                blue += 1;
-            } else {
-                will_brighten = false;
-            }
-        } else {
-            if (red > 0) {
-                red -= 1;
-            } else if (green > 0) {
-                green -= 1;
-            } else if (blue > 0) {
-                blue -= 1;
-            } else {
-                will_brighten = true;
-            }
-        }
 
         // Wait before next frame
         SDL_Delay(FRAME_DELAY);
