@@ -9,7 +9,12 @@ const int FPS = 60;
 // Derived
 const int FRAME_DELAY = 1000 / FPS;
 
-int main() {
+struct SDLContext {
+    SDL_Window *window;
+    SDL_Surface *surface;
+};
+
+SDLContext setupSDL() {
     // Pointers to our window and surface
     SDL_Surface *winSurface = NULL;
     SDL_Window *window = NULL;
@@ -17,7 +22,7 @@ int main() {
     // Initialize SDL, SDL_Init will return -1 if it fails
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         std::cout << "Error initializing SDL: " << SDL_GetError() << std::endl;
-        return 1;
+        exit(EXIT_FAILURE);
     }
 
     // Create our window
@@ -28,7 +33,7 @@ int main() {
     // Make sure creating the window succeeded
     if (!window) {
         std::cout << "Error creating window: " << SDL_GetError() << std::endl;
-        return 1;
+        exit(EXIT_FAILURE);
     }
 
     // Get the surface from the window
@@ -37,8 +42,14 @@ int main() {
     // Make sure getting the surface succeeded
     if (!winSurface) {
         std::cout << "Error getting surface: " << SDL_GetError() << std::endl;
-        return 1;
+        exit(EXIT_FAILURE);
     }
+
+    return {window, winSurface};
+}
+
+int main() {
+    auto sdl = setupSDL();
 
     SDL_Event event;
     bool running = true;
@@ -54,21 +65,22 @@ int main() {
         }
 
         // Fill the window with a coloured rectangle
-        SDL_FillRect(winSurface, NULL, SDL_MapRGB(winSurface->format, 0, 0, 0));
+        SDL_FillRect(sdl.surface, NULL,
+                     SDL_MapRGB(sdl.surface->format, 0, 0, 0));
 
         // Update the window display
-        SDL_UpdateWindowSurface(window);
+        SDL_UpdateWindowSurface(sdl.window);
 
         // Wait before next frame
         SDL_Delay(FRAME_DELAY);
     }
 
     // Destroy the window, also destroys the surface
-    SDL_DestroyWindow(window);
+    SDL_DestroyWindow(sdl.window);
 
     // Quit SDL
     SDL_Quit();
 
     // End the program
-    return 0;
+    return EXIT_SUCCESS;
 }
