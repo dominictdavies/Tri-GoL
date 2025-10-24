@@ -3,6 +3,6 @@
 
   packages = [
     pkgs.valgrind
-    pkgs.SDL2
+    pkgs.sdl3
   ];
 }
