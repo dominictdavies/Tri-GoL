@@ -46,6 +46,32 @@ SDLContext setupSDL() {
     return {window, surface};
 }
 
+bool eventLoop(SDLContext sdl) {
+    SDL_Event event;
+
+    while (SDL_PollEvent(&event)) {
+        switch (event.type) {
+        case SDL_EVENT_QUIT:
+            return false;
+            break;
+        }
+    }
+
+    return true;
+}
+
+void drawFrame(SDLContext sdl) {
+    // Fill the window with a colour
+    SDL_FillSurfaceRect(sdl.surface, NULL,
+                        SDL_MapSurfaceRGB(sdl.surface, 0, 0, 0));
+
+    // Update the window display
+    SDL_UpdateWindowSurface(sdl.window);
+
+    // Wait before next frame
+    SDL_Delay(FRAME_DELAY);
+}
+
 void closeSDL(SDLContext sdl) {
     // Destroy the window, also destroys the surface
     SDL_DestroyWindow(sdl.window);
@@ -57,31 +83,12 @@ void closeSDL(SDLContext sdl) {
 int main() {
     auto sdl = setupSDL();
 
-    SDL_Event event;
     bool running = true;
-
-    // Main loop
     while (running) {
-        while (SDL_PollEvent(&event)) {
-            switch (event.type) {
-            case SDL_EVENT_QUIT:
-                running = false;
-                break;
-            }
-        }
-
-        // Fill the window with a colour
-        SDL_FillSurfaceRect(sdl.surface, NULL,
-                            SDL_MapSurfaceRGB(sdl.surface, 0, 0, 0));
-
-        // Update the window display
-        SDL_UpdateWindowSurface(sdl.window);
-
-        // Wait before next frame
-        SDL_Delay(FRAME_DELAY);
+        running = eventLoop(sdl);
+        drawFrame(sdl);
     }
 
     closeSDL(sdl);
-
     return EXIT_SUCCESS;
 }
