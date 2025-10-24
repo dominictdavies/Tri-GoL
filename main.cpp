@@ -7,7 +7,7 @@ const int WINDOW_HEIGHT = 840;
 const int FPS = 60;
 
 // Derived
-const int FRAME_DELAY = 1000 / FPS;
+const int FRAME_DELAY = 1e9 / FPS;
 
 struct SDLContext {
     SDL_Window *window;
@@ -69,7 +69,7 @@ void drawFrame(SDLContext sdl) {
     SDL_UpdateWindowSurface(sdl.window);
 
     // Wait before next frame
-    SDL_Delay(FRAME_DELAY);
+    SDL_DelayPrecise(FRAME_DELAY);
 }
 
 void closeSDL(SDLContext sdl) {
