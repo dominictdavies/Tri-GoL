@@ -16,8 +16,8 @@ struct SDLContext {
 
 SDLContext setupSDL() {
     // Pointers to our window and surface
-    SDL_Surface *winSurface = NULL;
     SDL_Window *window = NULL;
+    SDL_Surface *surface = NULL;
 
     // Initialize SDL, SDL_Init will return -1 if it fails
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -37,15 +37,23 @@ SDLContext setupSDL() {
     }
 
     // Get the surface from the window
-    winSurface = SDL_GetWindowSurface(window);
+    surface = SDL_GetWindowSurface(window);
 
     // Make sure getting the surface succeeded
-    if (!winSurface) {
+    if (!surface) {
         std::cout << "Error getting surface: " << SDL_GetError() << std::endl;
         exit(EXIT_FAILURE);
     }
 
-    return {window, winSurface};
+    return {window, surface};
+}
+
+void closeSDL(SDLContext sdl) {
+    // Destroy the window, also destroys the surface
+    SDL_DestroyWindow(sdl.window);
+
+    // Quit SDL
+    SDL_Quit();
 }
 
 int main() {
@@ -75,12 +83,5 @@ int main() {
         SDL_Delay(FRAME_DELAY);
     }
 
-    // Destroy the window, also destroys the surface
-    SDL_DestroyWindow(sdl.window);
-
-    // Quit SDL
-    SDL_Quit();
-
-    // End the program
     return EXIT_SUCCESS;
 }
