@@ -1,19 +1,21 @@
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
+#include <numbers>
 
-static SDL_Window *window = NULL;
-static SDL_Renderer *renderer = NULL;
+static SDL_Window *window = nullptr;
+static SDL_Renderer *renderer = nullptr;
 
 // Configuration
-const int WINDOW_WIDTH = 840;
-const int WINDOW_HEIGHT = 840;
-const int ROW_COUNT = 60;
-const int FPS = 60;
+constexpr int WINDOW_WIDTH = 840;
+constexpr int WINDOW_HEIGHT = 840;
+constexpr int ROW_COUNT = 60;
+constexpr int FPS = 60;
 
 // Derived
-const int ROW_HEIGHT = WINDOW_HEIGHT / ROW_COUNT;
-const int FRAME_DELAY = 1e9 / FPS;
+constexpr double ROW_HEIGHT = WINDOW_HEIGHT / ROW_COUNT;
+constexpr double COLUMN_WIDTH = 2 * ROW_HEIGHT / std::numbers::sqrt3;
+constexpr uint64_t FRAME_DELAY = 1e9 / FPS;
 
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
     SDL_SetAppMetadata("Tri-GoL", "0.1", "dev.dominictdavies.trigol");
@@ -47,10 +49,18 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer);
 
-    // Draw grey lines
+    // Draw horizontal lines
     SDL_SetRenderDrawColor(renderer, 64, 64, 64, SDL_ALPHA_OPAQUE);
-    for (int y = ROW_HEIGHT; y < WINDOW_HEIGHT; y += ROW_HEIGHT) {
+    for (double y = ROW_HEIGHT; y < WINDOW_HEIGHT; y += ROW_HEIGHT) {
         SDL_RenderLine(renderer, 0, y, WINDOW_WIDTH, y);
+    }
+
+    // Draw diagonal lines
+    for (double x = -WINDOW_WIDTH; x < WINDOW_WIDTH * 2; x += COLUMN_WIDTH) {
+        SDL_RenderLine(renderer, x, 0, x + COLUMN_WIDTH / 2 * ROW_COUNT,
+                       WINDOW_HEIGHT);
+        SDL_RenderLine(renderer, x, 0, x - COLUMN_WIDTH / 2 * ROW_COUNT,
+                       WINDOW_HEIGHT);
     }
 
     // Put everything onto the screen
