@@ -9,13 +9,14 @@ static SDL_Renderer *renderer = nullptr;
 // Configuration
 constexpr int WINDOW_WIDTH = 840;
 constexpr int WINDOW_HEIGHT = 840;
-constexpr int ROW_COUNT = 60;
 constexpr int FPS = 60;
+constexpr int ROW_COUNT = 60;
+constexpr bool DRAW_GRID = true;
 
 // Derived
+constexpr uint64_t FRAME_DELAY = 1e9 / FPS;
 constexpr double ROW_HEIGHT = WINDOW_HEIGHT / ROW_COUNT;
 constexpr double COLUMN_WIDTH = 2 * ROW_HEIGHT / std::numbers::sqrt3;
-constexpr uint64_t FRAME_DELAY = 1e9 / FPS;
 
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
     SDL_SetAppMetadata("Tri-GoL", "0.1", "dev.dominictdavies.trigol");
@@ -49,18 +50,21 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer);
 
-    // Draw horizontal lines
-    SDL_SetRenderDrawColor(renderer, 64, 64, 64, SDL_ALPHA_OPAQUE);
-    for (double y = ROW_HEIGHT; y < WINDOW_HEIGHT; y += ROW_HEIGHT) {
-        SDL_RenderLine(renderer, 0, y, WINDOW_WIDTH, y);
-    }
+    if (DRAW_GRID) {
+        // Draw horizontal lines
+        SDL_SetRenderDrawColor(renderer, 64, 64, 64, SDL_ALPHA_OPAQUE);
+        for (double y = ROW_HEIGHT; y < WINDOW_HEIGHT; y += ROW_HEIGHT) {
+            SDL_RenderLine(renderer, 0, y, WINDOW_WIDTH, y);
+        }
 
-    // Draw diagonal lines
-    for (double x = -WINDOW_WIDTH; x < WINDOW_WIDTH * 2; x += COLUMN_WIDTH) {
-        SDL_RenderLine(renderer, x, 0, x + COLUMN_WIDTH / 2 * ROW_COUNT,
-                       WINDOW_HEIGHT);
-        SDL_RenderLine(renderer, x, 0, x - COLUMN_WIDTH / 2 * ROW_COUNT,
-                       WINDOW_HEIGHT);
+        // Draw diagonal lines
+        for (double x = -WINDOW_WIDTH; x < WINDOW_WIDTH * 2;
+             x += COLUMN_WIDTH) {
+            SDL_RenderLine(renderer, x, 0, x + COLUMN_WIDTH / 2 * ROW_COUNT,
+                           WINDOW_HEIGHT);
+            SDL_RenderLine(renderer, x, 0, x - COLUMN_WIDTH / 2 * ROW_COUNT,
+                           WINDOW_HEIGHT);
+        }
     }
 
     // Put everything onto the screen
