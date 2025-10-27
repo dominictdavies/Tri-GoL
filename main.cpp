@@ -45,26 +45,29 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event) {
     return SDL_APP_CONTINUE;
 }
 
+void draw_grid() {
+    // Draw horizontal lines
+    SDL_SetRenderDrawColor(renderer, 64, 64, 64, SDL_ALPHA_OPAQUE);
+    for (double y = ROW_HEIGHT; y < WINDOW_HEIGHT; y += ROW_HEIGHT) {
+        SDL_RenderLine(renderer, 0, y, WINDOW_WIDTH, y);
+    }
+
+    // Draw diagonal lines
+    for (double x = -WINDOW_WIDTH; x < WINDOW_WIDTH * 2; x += COLUMN_WIDTH) {
+        SDL_RenderLine(renderer, x, 0, x + COLUMN_WIDTH / 2 * ROW_COUNT,
+                       WINDOW_HEIGHT);
+        SDL_RenderLine(renderer, x, 0, x - COLUMN_WIDTH / 2 * ROW_COUNT,
+                       WINDOW_HEIGHT);
+    }
+}
+
 SDL_AppResult SDL_AppIterate(void *appstate) {
     // Start with a black canvas
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer);
 
     if (DRAW_GRID) {
-        // Draw horizontal lines
-        SDL_SetRenderDrawColor(renderer, 64, 64, 64, SDL_ALPHA_OPAQUE);
-        for (double y = ROW_HEIGHT; y < WINDOW_HEIGHT; y += ROW_HEIGHT) {
-            SDL_RenderLine(renderer, 0, y, WINDOW_WIDTH, y);
-        }
-
-        // Draw diagonal lines
-        for (double x = -WINDOW_WIDTH; x < WINDOW_WIDTH * 2;
-             x += COLUMN_WIDTH) {
-            SDL_RenderLine(renderer, x, 0, x + COLUMN_WIDTH / 2 * ROW_COUNT,
-                           WINDOW_HEIGHT);
-            SDL_RenderLine(renderer, x, 0, x - COLUMN_WIDTH / 2 * ROW_COUNT,
-                           WINDOW_HEIGHT);
-        }
+        draw_grid();
     }
 
     // Put everything onto the screen
