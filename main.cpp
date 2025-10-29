@@ -7,6 +7,7 @@ static SDL_Window *window = nullptr;
 static SDL_Renderer *renderer = nullptr;
 
 // Configuration
+// TODO: Adjust datatypes to better suit usage
 constexpr int WINDOW_WIDTH = 840;
 constexpr int WINDOW_HEIGHT = 840;
 constexpr int FPS = 60;
@@ -17,6 +18,7 @@ constexpr bool DRAW_GRID = true;
 constexpr uint64_t FRAME_DELAY = 1e9 / FPS;
 constexpr double ROW_HEIGHT = WINDOW_HEIGHT / ROW_COUNT;
 constexpr double COLUMN_WIDTH = 2 * ROW_HEIGHT / std::numbers::sqrt3;
+constexpr double DIAGONAL_LINE_TRAVEL_X = COLUMN_WIDTH / 2 * ROW_COUNT;
 
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
     SDL_SetAppMetadata("Tri-GoL", "0.1", "dev.dominictdavies.trigol");
@@ -46,18 +48,18 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event) {
 }
 
 void draw_grid() {
-    // Draw horizontal lines
+    // Use opaque grey colour
     SDL_SetRenderDrawColor(renderer, 64, 64, 64, SDL_ALPHA_OPAQUE);
+
+    // Draw horizontal lines
     for (double y = ROW_HEIGHT; y < WINDOW_HEIGHT; y += ROW_HEIGHT) {
         SDL_RenderLine(renderer, 0, y, WINDOW_WIDTH, y);
     }
 
     // Draw diagonal lines
-    for (double x = -WINDOW_WIDTH; x < WINDOW_WIDTH * 2; x += COLUMN_WIDTH) {
-        SDL_RenderLine(renderer, x, 0, x + COLUMN_WIDTH / 2 * ROW_COUNT,
-                       WINDOW_HEIGHT);
-        SDL_RenderLine(renderer, x, 0, x - COLUMN_WIDTH / 2 * ROW_COUNT,
-                       WINDOW_HEIGHT);
+    for (double x = -DIAGONAL_LINE_TRAVEL_X; x < WINDOW_WIDTH + DIAGONAL_LINE_TRAVEL_X; x += COLUMN_WIDTH) {
+        SDL_RenderLine(renderer, x, 0, x - DIAGONAL_LINE_TRAVEL_X, WINDOW_HEIGHT);
+        SDL_RenderLine(renderer, x, 0, x + DIAGONAL_LINE_TRAVEL_X, WINDOW_HEIGHT);
     }
 }
 
