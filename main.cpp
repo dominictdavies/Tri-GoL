@@ -7,15 +7,14 @@ static SDL_Window *window = nullptr;
 static SDL_Renderer *renderer = nullptr;
 
 // Configuration
-// TODO: Adjust datatypes to better suit usage
-constexpr int WINDOW_WIDTH = 840;
-constexpr int WINDOW_HEIGHT = 840;
-constexpr int FPS = 60;
-constexpr int ROW_COUNT = 60;
+constexpr unsigned WINDOW_WIDTH = 840;
+constexpr unsigned WINDOW_HEIGHT = 840;
+constexpr unsigned FPS = 60;
+constexpr unsigned ROW_COUNT = 60;
 constexpr bool DRAW_GRID = true;
 
 // Derived
-constexpr uint64_t FRAME_DELAY = 1e9 / FPS;
+constexpr unsigned FRAME_DELAY = 1e9 / FPS;
 constexpr double ROW_HEIGHT = WINDOW_HEIGHT / ROW_COUNT;
 constexpr double COLUMN_WIDTH = 2 * ROW_HEIGHT / std::numbers::sqrt3;
 constexpr double DIAGONAL_LINE_TRAVEL_X = COLUMN_WIDTH / 2 * ROW_COUNT;
@@ -57,9 +56,12 @@ void draw_grid() {
     }
 
     // Draw diagonal lines
-    for (double x = -DIAGONAL_LINE_TRAVEL_X; x < WINDOW_WIDTH + DIAGONAL_LINE_TRAVEL_X; x += COLUMN_WIDTH) {
-        SDL_RenderLine(renderer, x, 0, x - DIAGONAL_LINE_TRAVEL_X, WINDOW_HEIGHT);
-        SDL_RenderLine(renderer, x, 0, x + DIAGONAL_LINE_TRAVEL_X, WINDOW_HEIGHT);
+    for (double x = -DIAGONAL_LINE_TRAVEL_X;
+         x < WINDOW_WIDTH + DIAGONAL_LINE_TRAVEL_X; x += COLUMN_WIDTH) {
+        SDL_RenderLine(renderer, x, 0, x - DIAGONAL_LINE_TRAVEL_X,
+                       WINDOW_HEIGHT);
+        SDL_RenderLine(renderer, x, 0, x + DIAGONAL_LINE_TRAVEL_X,
+                       WINDOW_HEIGHT);
     }
 }
 
