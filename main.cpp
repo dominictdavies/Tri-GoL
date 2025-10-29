@@ -1,6 +1,7 @@
 #define SDL_MAIN_USE_CALLBACKS 1
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
+#include <bitset>
 #include <cmath>
 #include <numbers>
 
@@ -18,8 +19,32 @@ constexpr double COLUMN_WIDTH = 2 * ROW_HEIGHT / std::numbers::sqrt3;
 constexpr unsigned COLUMN_COUNT = std::ceil(WINDOW_WIDTH / COLUMN_WIDTH);
 constexpr double DIAGONAL_LINE_TRAVEL_X = COLUMN_WIDTH / 2 * ROW_COUNT;
 
+std::bitset<ROW_COUNT * COLUMN_COUNT> game_state;
+
 static SDL_Window *window = nullptr;
 static SDL_Renderer *renderer = nullptr;
+
+void draw_game() {
+    SDL_Vertex vertices[3];
+
+    SDL_zeroa(vertices);
+    vertices[0].position = {0, 0};
+    vertices[0].color = {1.0f, 1.0f, 1.0f};
+    vertices[1].position = {COLUMN_WIDTH, 0};
+    vertices[1].color = {1.0f, 1.0f, 1.0f};
+    vertices[2].position = {COLUMN_WIDTH / 2, ROW_HEIGHT};
+    vertices[2].color = {1.0f, 1.0f, 1.0f};
+    SDL_RenderGeometry(renderer, nullptr, vertices, 3, nullptr, 0);
+
+    SDL_zeroa(vertices);
+    vertices[0].position = {COLUMN_WIDTH * 1.5, ROW_HEIGHT};
+    vertices[0].color = {1.0f, 1.0f, 1.0f};
+    vertices[1].position = {COLUMN_WIDTH * 2.5, ROW_HEIGHT};
+    vertices[1].color = {1.0f, 1.0f, 1.0f};
+    vertices[2].position = {COLUMN_WIDTH * 1.5 + (COLUMN_WIDTH / 2), 0};
+    vertices[2].color = {1.0f, 1.0f, 1.0f};
+    SDL_RenderGeometry(renderer, nullptr, vertices, 3, nullptr, 0);
+}
 
 void draw_grid() {
     // Use opaque grey colour
@@ -72,6 +97,7 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer);
 
+    draw_game();
     if (DRAW_GRID) {
         draw_grid();
     }
