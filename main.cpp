@@ -15,7 +15,7 @@ constexpr bool DRAW_GRID = true;
 
 // Derived
 constexpr unsigned FRAME_DELAY = 1e9 / FPS;
-constexpr double ROW_HEIGHT = WINDOW_HEIGHT / ROW_COUNT;
+constexpr double ROW_HEIGHT = static_cast<double>(WINDOW_HEIGHT) / ROW_COUNT;
 constexpr double COLUMN_WIDTH = 2 * ROW_HEIGHT / std::numbers::sqrt3;
 constexpr double DIAGONAL_LINE_TRAVEL_X = COLUMN_WIDTH / 2 * ROW_COUNT;
 
