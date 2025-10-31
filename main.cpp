@@ -9,44 +9,44 @@ constexpr unsigned WINDOW_WIDTH = 840;
 constexpr unsigned WINDOW_HEIGHT = 840;
 constexpr unsigned FPS = 60;
 constexpr unsigned ROW_COUNT = 60;
-constexpr bool DRAW_GRID = true;
+constexpr bool IS_GRID_DRAWN = false;
 
 // Derived
 constexpr unsigned FRAME_DELAY = 1e9 / FPS;
 constexpr double ROW_HEIGHT = static_cast<double>(WINDOW_HEIGHT) / ROW_COUNT;
-constexpr double COLUMN_WIDTH = 2 * ROW_HEIGHT / std::numbers::sqrt3;
-constexpr unsigned COLUMN_COUNT = WINDOW_WIDTH / (COLUMN_WIDTH / 2);
-constexpr double DIAGONAL_LINE_TRAVEL_X = COLUMN_WIDTH / 2 * ROW_COUNT;
+constexpr double COL_WIDTH = 2 * ROW_HEIGHT / std::numbers::sqrt3;
+constexpr unsigned COL_COUNT = WINDOW_WIDTH / (COL_WIDTH / 2);
+constexpr double DIAGONAL_LINE_TRAVEL_X = COL_WIDTH / 2 * ROW_COUNT;
 
-static std::bitset<ROW_COUNT * COLUMN_COUNT> is_alive;
+static std::bitset<ROW_COUNT * COL_COUNT> is_alive;
 static SDL_Window *window = nullptr;
 static SDL_Renderer *renderer = nullptr;
 
 void initialise_game_state() {
     unsigned middle_row = (ROW_COUNT / 2) - 1;
-    unsigned middle_column = (COLUMN_COUNT / 2) - 1;
-    size_t index = middle_row * COLUMN_COUNT + middle_column;
+    unsigned middle_col = (COL_COUNT / 2) - 1;
+    size_t index = middle_row * COL_COUNT + middle_col;
     is_alive[index] = true;
 }
 
-void draw_triangle(unsigned row, unsigned column) {
+void draw_triangle(unsigned row, unsigned col) {
     // Increment row to correct origin for up-triangles
-    bool is_up_triangle = (row + column) & 1;
+    bool is_up_triangle = (row + col) & 1;
     if (is_up_triangle) {
         row += 1;
     }
 
     // Use leftmost corner as positional origin
-    float origin_x = column * ((float)COLUMN_WIDTH / 2);
+    float origin_x = col * ((float)COL_WIDTH / 2);
     float origin_y = row * (float)ROW_HEIGHT;
 
     // Set vertex positions
     SDL_Vertex vertices[3];
     SDL_zeroa(vertices);
     vertices[0].position = {origin_x, origin_y};
-    vertices[1].position = {origin_x + (float)COLUMN_WIDTH, origin_y};
+    vertices[1].position = {origin_x + (float)COL_WIDTH, origin_y};
     vertices[2].position = {
-        origin_x + ((float)COLUMN_WIDTH / 2),
+        origin_x + ((float)COL_WIDTH / 2),
         origin_y + (is_up_triangle ? -(float)ROW_HEIGHT : (float)ROW_HEIGHT)};
 
     // Set triangle colour to white
@@ -60,10 +60,10 @@ void draw_triangle(unsigned row, unsigned column) {
 
 void draw_game() {
     for (unsigned row = 0; row < ROW_COUNT; row++) {
-        for (unsigned column = 0; column < COLUMN_COUNT; column++) {
-            size_t index = row * COLUMN_COUNT + column;
+        for (unsigned col = 0; col < COL_COUNT; col++) {
+            size_t index = row * COL_COUNT + col;
             if (is_alive[index]) {
-                draw_triangle(row, column);
+                draw_triangle(row, col);
             }
         }
     }
@@ -80,7 +80,7 @@ void draw_grid() {
 
     // Draw diagonal lines
     for (double x = -DIAGONAL_LINE_TRAVEL_X;
-         x < WINDOW_WIDTH + DIAGONAL_LINE_TRAVEL_X; x += COLUMN_WIDTH) {
+         x < WINDOW_WIDTH + DIAGONAL_LINE_TRAVEL_X; x += COL_WIDTH) {
         SDL_RenderLine(renderer, x, 0, x - DIAGONAL_LINE_TRAVEL_X,
                        WINDOW_HEIGHT);
         SDL_RenderLine(renderer, x, 0, x + DIAGONAL_LINE_TRAVEL_X,
@@ -123,7 +123,7 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
     SDL_RenderClear(renderer);
 
     draw_game();
-    if (DRAW_GRID) {
+    if (IS_GRID_DRAWN) {
         draw_grid();
     }
 
