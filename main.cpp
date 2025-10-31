@@ -9,7 +9,7 @@ constexpr unsigned WINDOW_WIDTH = 840;
 constexpr unsigned WINDOW_HEIGHT = 840;
 constexpr unsigned FPS = 60;
 constexpr unsigned ROW_COUNT = 60;
-constexpr bool IS_GRID_DRAWN = false;
+constexpr bool SHOW_GRID = false;
 
 // Derived
 constexpr unsigned FRAME_DELAY = 1e9 / FPS;
@@ -18,6 +18,7 @@ constexpr double COL_WIDTH = 2 * ROW_HEIGHT / std::numbers::sqrt3;
 constexpr unsigned COL_COUNT = WINDOW_WIDTH / (COL_WIDTH / 2);
 constexpr double DIAGONAL_LINE_TRAVEL_X = COL_WIDTH / 2 * ROW_COUNT;
 
+// Globals
 static std::bitset<ROW_COUNT * COL_COUNT> is_alive;
 static SDL_Window *window = nullptr;
 static SDL_Renderer *renderer = nullptr;
@@ -29,7 +30,7 @@ void initialise_game_state() {
     is_alive[index] = true;
 }
 
-void draw_triangle(unsigned row, unsigned col) {
+void render_triangle(unsigned row, unsigned col) {
     // Increment row to correct origin for up-triangles
     bool is_up_triangle = (row + col) & 1;
     if (is_up_triangle) {
@@ -58,27 +59,27 @@ void draw_triangle(unsigned row, unsigned col) {
     SDL_RenderGeometry(renderer, nullptr, vertices, 3, nullptr, 0);
 }
 
-void draw_game() {
+void render_game() {
     for (unsigned row = 0; row < ROW_COUNT; row++) {
         for (unsigned col = 0; col < COL_COUNT; col++) {
             size_t index = row * COL_COUNT + col;
             if (is_alive[index]) {
-                draw_triangle(row, col);
+                render_triangle(row, col);
             }
         }
     }
 }
 
-void draw_grid() {
+void render_grid() {
     // Use opaque grey colour
     SDL_SetRenderDrawColor(renderer, 64, 64, 64, SDL_ALPHA_OPAQUE);
 
-    // Draw horizontal lines
+    // Render horizontal lines
     for (double y = ROW_HEIGHT; y < WINDOW_HEIGHT; y += ROW_HEIGHT) {
         SDL_RenderLine(renderer, 0, y, WINDOW_WIDTH, y);
     }
 
-    // Draw diagonal lines
+    // Render diagonal lines
     for (double x = -DIAGONAL_LINE_TRAVEL_X;
          x < WINDOW_WIDTH + DIAGONAL_LINE_TRAVEL_X; x += COL_WIDTH) {
         SDL_RenderLine(renderer, x, 0, x - DIAGONAL_LINE_TRAVEL_X,
@@ -122,9 +123,10 @@ SDL_AppResult SDL_AppIterate(void *appstate) {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
     SDL_RenderClear(renderer);
 
-    draw_game();
-    if (IS_GRID_DRAWN) {
-        draw_grid();
+    // Render the game before the grid
+    render_game();
+    if (SHOW_GRID) {
+        render_grid();
     }
 
     // Put everything onto the screen
