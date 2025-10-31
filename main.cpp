@@ -2,6 +2,7 @@
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
 #include <bitset>
+#include <cstdint>
 #include <numbers>
 
 // Configuration
@@ -105,6 +106,8 @@ void render_frame() {
     SDL_DelayPrecise(FRAME_DELAY);
 }
 
+void execute_rule(uint16_t rule = 1911) {}
+
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
     SDL_SetAppMetadata("Tri-GoL", "0.1", "dev.dominictdavies.trigol");
 
@@ -136,6 +139,7 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event) {
 
 SDL_AppResult SDL_AppIterate(void *appstate) {
     render_frame();
+    execute_rule();
     return SDL_APP_CONTINUE;
 }
 
