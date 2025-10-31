@@ -59,17 +59,6 @@ void render_triangle(unsigned row, unsigned col) {
     SDL_RenderGeometry(renderer, nullptr, vertices, 3, nullptr, 0);
 }
 
-void render_game() {
-    for (unsigned row = 0; row < ROW_COUNT; row++) {
-        for (unsigned col = 0; col < COL_COUNT; col++) {
-            size_t index = row * COL_COUNT + col;
-            if (is_alive[index]) {
-                render_triangle(row, col);
-            }
-        }
-    }
-}
-
 void render_grid() {
     // Use opaque grey colour
     SDL_SetRenderDrawColor(renderer, 64, 64, 64, SDL_ALPHA_OPAQUE);
@@ -87,6 +76,33 @@ void render_grid() {
         SDL_RenderLine(renderer, x, 0, x + DIAGONAL_LINE_TRAVEL_X,
                        WINDOW_HEIGHT);
     }
+}
+
+void render_frame() {
+    // Start with a black canvas
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+    SDL_RenderClear(renderer);
+
+    // Render the triangles
+    for (unsigned row = 0; row < ROW_COUNT; row++) {
+        for (unsigned col = 0; col < COL_COUNT; col++) {
+            size_t index = row * COL_COUNT + col;
+            if (is_alive[index]) {
+                render_triangle(row, col);
+            }
+        }
+    }
+
+    // Optionally render the grid
+    if (SHOW_GRID) {
+        render_grid();
+    }
+
+    // Present everything on the screen
+    SDL_RenderPresent(renderer);
+
+    // Wait before the next frame
+    SDL_DelayPrecise(FRAME_DELAY);
 }
 
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
@@ -119,22 +135,7 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event) {
 }
 
 SDL_AppResult SDL_AppIterate(void *appstate) {
-    // Start with a black canvas
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
-    SDL_RenderClear(renderer);
-
-    // Render the game before the grid
-    render_game();
-    if (SHOW_GRID) {
-        render_grid();
-    }
-
-    // Put everything onto the screen
-    SDL_RenderPresent(renderer);
-
-    // Wait before next frame
-    SDL_DelayPrecise(FRAME_DELAY);
-
+    render_frame();
     return SDL_APP_CONTINUE;
 }
 
