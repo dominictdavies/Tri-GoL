@@ -106,7 +106,7 @@ void render_frame() {
     SDL_DelayPrecise(FRAME_DELAY);
 }
 
-void execute_rule(uint16_t rule = 1911) {}
+void execute_rule(uint16_t rule = 3710) {}
 
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
     SDL_SetAppMetadata("Tri-GoL", "0.1", "dev.dominictdavies.trigol");
