@@ -9,9 +9,7 @@ static SDL_Window *window = nullptr;
 static SDL_Renderer *renderer = nullptr;
 
 void initialise_game_state() {
-    unsigned middle_row = (ROW_COUNT / 2) - 1;
-    unsigned middle_col = (COL_COUNT / 2) - 1;
-    size_t index = middle_row * COL_COUNT + middle_col;
+    size_t index = MIDDLE_ROW * COL_COUNT + MIDDLE_COL;
     is_alive[index] = true;
 }
 
