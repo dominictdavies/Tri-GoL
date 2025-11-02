@@ -1,23 +1,7 @@
 #define SDL_MAIN_USE_CALLBACKS 1
+#include "utils.hpp"
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_main.h>
-#include <bitset>
-#include <cstdint>
-#include <numbers>
-
-// Configuration
-constexpr unsigned WINDOW_WIDTH = 840;
-constexpr unsigned WINDOW_HEIGHT = 840;
-constexpr unsigned FPS = 60;
-constexpr unsigned ROW_COUNT = 60;
-constexpr bool SHOW_GRID = false;
-
-// Derived
-constexpr unsigned FRAME_DELAY = 1e9 / FPS;
-constexpr double ROW_HEIGHT = static_cast<double>(WINDOW_HEIGHT) / ROW_COUNT;
-constexpr double COL_WIDTH = 2 * ROW_HEIGHT / std::numbers::sqrt3;
-constexpr unsigned COL_COUNT = WINDOW_WIDTH / (COL_WIDTH / 2);
-constexpr double DIAGONAL_LINE_TRAVEL_X = COL_WIDTH / 2 * ROW_COUNT;
 
 // Globals
 static std::bitset<ROW_COUNT * COL_COUNT> is_alive;
@@ -106,8 +90,6 @@ void render_frame() {
     SDL_DelayPrecise(FRAME_DELAY);
 }
 
-void execute_rule(uint16_t rule = 3710) {}
-
 SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
     SDL_SetAppMetadata("Tri-GoL", "0.1", "dev.dominictdavies.trigol");
 
@@ -139,7 +121,6 @@ SDL_AppResult SDL_AppEvent(void *appstate, SDL_Event *event) {
 
 SDL_AppResult SDL_AppIterate(void *appstate) {
     render_frame();
-    execute_rule();
     return SDL_APP_CONTINUE;
 }
 
