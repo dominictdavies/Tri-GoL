@@ -1,8 +1,9 @@
 { pkgs, ... }: {
   languages.cplusplus.enable = true;
 
-  packages = [
-    pkgs.valgrind
-    pkgs.sdl3
+  packages = with pkgs; [
+    valgrind
+    sdl3
+    catch2_3
   ];
 }

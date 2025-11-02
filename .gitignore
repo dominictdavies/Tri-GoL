@@ -40,6 +40,9 @@
 # debug information files
 *.dwo
 
+# Build environment
+build
+
 # Devenv
 .devenv*
 devenv.local.nix
