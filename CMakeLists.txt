@@ -13,6 +13,6 @@ target_link_libraries(main PRIVATE SDL3::SDL3)
 
 # Tests with Catch2
 find_package(Catch2 3 REQUIRED)
-add_executable(tests tests/test.cpp src/utils.cpp)
+add_executable(tests tests/test_utils.cpp src/utils.cpp)
 target_include_directories(tests PRIVATE include)
 target_link_libraries(tests PRIVATE Catch2::Catch2WithMain)
