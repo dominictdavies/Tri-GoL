@@ -8,7 +8,7 @@ constexpr unsigned WINDOW_WIDTH = 840;
 constexpr unsigned WINDOW_HEIGHT = 840;
 constexpr unsigned FPS = 60;
 constexpr unsigned ROW_COUNT = 60;
-constexpr bool SHOW_GRID = false;
+constexpr bool SHOW_GRID = true; // TODO: Not working with odd row counts
 
 // Derived
 constexpr unsigned FRAME_DELAY = 1e9 / FPS;
