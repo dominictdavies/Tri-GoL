@@ -1,7 +1,7 @@
 #include "utils.hpp"
 #include <catch2/catch_test_macros.hpp>
 
-TEST_CASE("all neighbourhoods are accurate", "[neighbourhood]") {
+TEST_CASE("gets all neighbourhoods correctly", "[get_neighbourhood]") {
     std::bitset<CELL_COUNT> is_alive;
 
     bool is_up_triangle = (MIDDLE_ROW + MIDDLE_COL) & 1;
