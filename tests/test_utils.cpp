@@ -2,7 +2,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 TEST_CASE("all neighbourhoods are accurate", "[neighbourhood]") {
-    std::bitset<ROW_COUNT * COL_COUNT> is_alive;
+    std::bitset<CELL_COUNT> is_alive;
 
     bool is_up_triangle = (MIDDLE_ROW + MIDDLE_COL) & 1;
     unsigned left_col = is_up_triangle ? MIDDLE_COL + 1 : MIDDLE_COL - 1;

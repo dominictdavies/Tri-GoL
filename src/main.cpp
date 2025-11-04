@@ -4,7 +4,7 @@
 #include <SDL3/SDL_main.h>
 
 // Globals
-static std::bitset<ROW_COUNT * COL_COUNT> is_alive;
+static std::bitset<CELL_COUNT> is_alive;
 static SDL_Window *window = nullptr;
 static SDL_Renderer *renderer = nullptr;
 
