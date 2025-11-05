@@ -18,6 +18,6 @@ constexpr unsigned COL_COUNT = WINDOW_WIDTH / (COL_WIDTH / 2);
 constexpr unsigned CELL_COUNT = ROW_COUNT * COL_COUNT;
 constexpr unsigned MIDDLE_ROW = (ROW_COUNT / 2) - 1;
 constexpr unsigned MIDDLE_COL = (COL_COUNT / 2) - 1;
-constexpr double DIAGONAL_LINE_TRAVEL_X = COL_WIDTH / 2 * ROW_COUNT;
+constexpr double DIAGONAL_LINE_X = COL_WIDTH / 2 * ROW_COUNT;
 
 #endif

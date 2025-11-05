@@ -58,12 +58,10 @@ void render_grid() {
     }
 
     // Render diagonal lines
-    for (double x = -DIAGONAL_LINE_TRAVEL_X;
-         x < WINDOW_WIDTH + DIAGONAL_LINE_TRAVEL_X; x += COL_WIDTH) {
-        SDL_RenderLine(renderer, x, 0, x - DIAGONAL_LINE_TRAVEL_X,
-                       WINDOW_HEIGHT);
-        SDL_RenderLine(renderer, x, 0, x + DIAGONAL_LINE_TRAVEL_X,
-                       WINDOW_HEIGHT);
+    for (double x = -DIAGONAL_LINE_X; x < WINDOW_WIDTH + DIAGONAL_LINE_X;
+         x += COL_WIDTH) {
+        SDL_RenderLine(renderer, x, 0, x - DIAGONAL_LINE_X, WINDOW_HEIGHT);
+        SDL_RenderLine(renderer, x, 0, x + DIAGONAL_LINE_X, WINDOW_HEIGHT);
     }
 }
 
