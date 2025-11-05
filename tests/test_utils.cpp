@@ -120,3 +120,49 @@ TEST_CASE("gets all neighbourhoods correctly", "[get_neighbourhood]") {
         REQUIRE(get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL) == 15);
     }
 }
+
+void test_rule_execution(const std::bitset<CELL_COUNT> &initial, uint16_t rule,
+                         const std::bitset<CELL_COUNT> &expected) {
+    auto result = execute_rule(initial, rule);
+    REQUIRE(result == expected);
+}
+
+void test_extreme_rule_execution(bool is_extinction_rule) {
+    std::bitset<CELL_COUNT> initial;
+    std::bitset<CELL_COUNT> expected;
+    uint16_t rule = is_extinction_rule ? 0 : 65535;
+
+    if (!is_extinction_rule) {
+        expected.flip();
+    }
+
+    SECTION(is_extinction_rule ? "empty remains empty" : "empty becomes full") {
+        test_rule_execution(initial, rule, expected);
+    }
+
+    SECTION(is_extinction_rule ? "full becomes empty" : "full remains full") {
+        initial.flip();
+        test_rule_execution(initial, rule, expected);
+    }
+
+    SECTION(is_extinction_rule ? "populated becomes empty"
+                               : "populated becomes full") {
+        for (unsigned row = 0; row < ROW_COUNT; row++) {
+            for (unsigned col = 0; col < COL_COUNT; col++) {
+                if ((row + col) % 3 == 0) {
+                    initial[row * COL_COUNT + col] = true;
+                }
+            }
+        }
+
+        test_rule_execution(initial, rule, expected);
+    }
+}
+
+TEST_CASE("executes extinction rule correctly", "[execute_rule]") {
+    test_extreme_rule_execution(/* is_extinction_rule= */ true);
+}
+
+TEST_CASE("executes saturation rule correctly", "[execute_rule]") {
+    test_extreme_rule_execution(/* is_extinction_rule= */ false);
+}
