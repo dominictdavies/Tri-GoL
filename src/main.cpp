@@ -13,7 +13,7 @@ void initialise_game_state() {
         for (unsigned col = 0; col < COL_COUNT; col++) {
             unsigned index = row * COL_COUNT + col;
             if (index % 3 == 0) {
-                is_alive[index] = true;
+                is_alive.set(index);
             }
         }
     }

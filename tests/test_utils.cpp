@@ -14,108 +14,108 @@ TEST_CASE("gets all neighbourhoods correctly", "[get_neighbourhood]") {
     }
 
     SECTION("dead-left neighbourhood is 1") {
-        is_alive[MIDDLE_ROW * COL_COUNT + left_col] = true;
+        is_alive.set(MIDDLE_ROW * COL_COUNT + left_col);
 
         REQUIRE(get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL) == 1);
     }
 
     SECTION("dead-right neighbourhood is 2") {
-        is_alive[MIDDLE_ROW * COL_COUNT + right_col] = true;
+        is_alive.set(MIDDLE_ROW * COL_COUNT + right_col);
 
         REQUIRE(get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL) == 2);
     }
 
     SECTION("dead-down neighbourhood is 3") {
-        is_alive[down_row * COL_COUNT + MIDDLE_COL] = true;
+        is_alive.set(down_row * COL_COUNT + MIDDLE_COL);
 
         REQUIRE(get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL) == 3);
     }
 
     SECTION("dead-left-right neighbourhood is 4") {
-        is_alive[MIDDLE_ROW * COL_COUNT + left_col] = true;
-        is_alive[MIDDLE_ROW * COL_COUNT + right_col] = true;
+        is_alive.set(MIDDLE_ROW * COL_COUNT + left_col);
+        is_alive.set(MIDDLE_ROW * COL_COUNT + right_col);
 
         REQUIRE(get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL) == 4);
     }
 
     SECTION("dead-left-down neighbourhood is 5") {
-        is_alive[MIDDLE_ROW * COL_COUNT + left_col] = true;
-        is_alive[down_row * COL_COUNT + MIDDLE_COL] = true;
+        is_alive.set(MIDDLE_ROW * COL_COUNT + left_col);
+        is_alive.set(down_row * COL_COUNT + MIDDLE_COL);
 
         REQUIRE(get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL) == 5);
     }
 
     SECTION("dead-right-down neighbourhood is 6") {
-        is_alive[MIDDLE_ROW * COL_COUNT + right_col] = true;
-        is_alive[down_row * COL_COUNT + MIDDLE_COL] = true;
+        is_alive.set(MIDDLE_ROW * COL_COUNT + right_col);
+        is_alive.set(down_row * COL_COUNT + MIDDLE_COL);
 
         REQUIRE(get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL) == 6);
     }
 
     SECTION("dead-full neighbourhood is 7") {
-        is_alive[MIDDLE_ROW * COL_COUNT + left_col] = true;
-        is_alive[MIDDLE_ROW * COL_COUNT + right_col] = true;
-        is_alive[down_row * COL_COUNT + MIDDLE_COL] = true;
+        is_alive.set(MIDDLE_ROW * COL_COUNT + left_col);
+        is_alive.set(MIDDLE_ROW * COL_COUNT + right_col);
+        is_alive.set(down_row * COL_COUNT + MIDDLE_COL);
 
         REQUIRE(get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL) == 7);
     }
 
     SECTION("live-empty neighbourhood is 8") {
-        is_alive[MIDDLE_ROW * COL_COUNT + MIDDLE_COL] = true;
+        is_alive.set(MIDDLE_ROW * COL_COUNT + MIDDLE_COL);
 
         REQUIRE(get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL) == 8);
     }
 
     SECTION("live-left neighbourhood is 9") {
-        is_alive[MIDDLE_ROW * COL_COUNT + MIDDLE_COL] = true;
-        is_alive[MIDDLE_ROW * COL_COUNT + left_col] = true;
+        is_alive.set(MIDDLE_ROW * COL_COUNT + MIDDLE_COL);
+        is_alive.set(MIDDLE_ROW * COL_COUNT + left_col);
 
         REQUIRE(get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL) == 9);
     }
 
     SECTION("live-right neighbourhood is 10") {
-        is_alive[MIDDLE_ROW * COL_COUNT + MIDDLE_COL] = true;
-        is_alive[MIDDLE_ROW * COL_COUNT + right_col] = true;
+        is_alive.set(MIDDLE_ROW * COL_COUNT + MIDDLE_COL);
+        is_alive.set(MIDDLE_ROW * COL_COUNT + right_col);
 
         REQUIRE(get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL) == 10);
     }
 
     SECTION("live-down neighbourhood is 11") {
-        is_alive[MIDDLE_ROW * COL_COUNT + MIDDLE_COL] = true;
-        is_alive[down_row * COL_COUNT + MIDDLE_COL] = true;
+        is_alive.set(MIDDLE_ROW * COL_COUNT + MIDDLE_COL);
+        is_alive.set(down_row * COL_COUNT + MIDDLE_COL);
 
         REQUIRE(get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL) == 11);
     }
 
     SECTION("live-left-right neighbourhood is 12") {
-        is_alive[MIDDLE_ROW * COL_COUNT + MIDDLE_COL] = true;
-        is_alive[MIDDLE_ROW * COL_COUNT + left_col] = true;
-        is_alive[MIDDLE_ROW * COL_COUNT + right_col] = true;
+        is_alive.set(MIDDLE_ROW * COL_COUNT + MIDDLE_COL);
+        is_alive.set(MIDDLE_ROW * COL_COUNT + left_col);
+        is_alive.set(MIDDLE_ROW * COL_COUNT + right_col);
 
         REQUIRE(get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL) == 12);
     }
 
     SECTION("live-left-down neighbourhood is 13") {
-        is_alive[MIDDLE_ROW * COL_COUNT + MIDDLE_COL] = true;
-        is_alive[MIDDLE_ROW * COL_COUNT + left_col] = true;
-        is_alive[down_row * COL_COUNT + MIDDLE_COL] = true;
+        is_alive.set(MIDDLE_ROW * COL_COUNT + MIDDLE_COL);
+        is_alive.set(MIDDLE_ROW * COL_COUNT + left_col);
+        is_alive.set(down_row * COL_COUNT + MIDDLE_COL);
 
         REQUIRE(get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL) == 13);
     }
 
     SECTION("live-right-down neighbourhood is 14") {
-        is_alive[MIDDLE_ROW * COL_COUNT + MIDDLE_COL] = true;
-        is_alive[MIDDLE_ROW * COL_COUNT + right_col] = true;
-        is_alive[down_row * COL_COUNT + MIDDLE_COL] = true;
+        is_alive.set(MIDDLE_ROW * COL_COUNT + MIDDLE_COL);
+        is_alive.set(MIDDLE_ROW * COL_COUNT + right_col);
+        is_alive.set(down_row * COL_COUNT + MIDDLE_COL);
 
         REQUIRE(get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL) == 14);
     }
 
     SECTION("live-full neighbourhood is 15") {
-        is_alive[MIDDLE_ROW * COL_COUNT + MIDDLE_COL] = true;
-        is_alive[MIDDLE_ROW * COL_COUNT + left_col] = true;
-        is_alive[MIDDLE_ROW * COL_COUNT + right_col] = true;
-        is_alive[down_row * COL_COUNT + MIDDLE_COL] = true;
+        is_alive.set(MIDDLE_ROW * COL_COUNT + MIDDLE_COL);
+        is_alive.set(MIDDLE_ROW * COL_COUNT + left_col);
+        is_alive.set(MIDDLE_ROW * COL_COUNT + right_col);
+        is_alive.set(down_row * COL_COUNT + MIDDLE_COL);
 
         REQUIRE(get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL) == 15);
     }
@@ -150,7 +150,7 @@ void test_extreme_rule_execution(bool is_extinction_rule) {
         for (unsigned row = 0; row < ROW_COUNT; row++) {
             for (unsigned col = 0; col < COL_COUNT; col++) {
                 if ((row + col) % 3 == 0) {
-                    initial[row * COL_COUNT + col] = true;
+                    initial.set(row * COL_COUNT + col);
                 }
             }
         }
