@@ -9,8 +9,14 @@ static SDL_Window *window = nullptr;
 static SDL_Renderer *renderer = nullptr;
 
 void initialise_game_state() {
-    size_t index = MIDDLE_ROW * COL_COUNT + MIDDLE_COL;
-    is_alive[index] = true;
+    for (unsigned row = 0; row < ROW_COUNT; row++) {
+        for (unsigned col = 0; col < COL_COUNT; col++) {
+            unsigned index = row * COL_COUNT + col;
+            if (index % 3 == 0) {
+                is_alive[index] = true;
+            }
+        }
+    }
 }
 
 void render_triangle(unsigned row, unsigned col) {
