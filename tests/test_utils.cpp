@@ -1,5 +1,6 @@
 #include "utils.hpp"
 #include <catch2/catch_test_macros.hpp>
+#include <limits>
 
 TEST_CASE("gets all neighbourhoods correctly", "[get_neighbourhood]") {
     std::bitset<CELL_COUNT> is_alive;
@@ -130,7 +131,8 @@ void test_rule_execution(const std::bitset<CELL_COUNT> &initial, uint16_t rule,
 void test_extreme_rule_execution(bool is_extinction_rule) {
     std::bitset<CELL_COUNT> initial;
     std::bitset<CELL_COUNT> expected;
-    uint16_t rule = is_extinction_rule ? 0 : 65535;
+    uint16_t rule = is_extinction_rule ? std::numeric_limits<uint16_t>::min()
+                                       : std::numeric_limits<uint16_t>::max();
 
     if (!is_extinction_rule) {
         expected.flip();
@@ -194,4 +196,51 @@ std::bitset<CELL_COUNT> get_test_pattern() {
     }
 
     return test_pattern;
+}
+
+void test_pattern_rule_execution(uint16_t rule) {
+    // clang-format off
+    const std::pair<unsigned, unsigned> test_cells[] = {
+        {0, 1}, {1, 3},
+        {0, 5}, {1, 7},
+        {0, 9}, {1, 11},
+        {0, 13}, {1, 15},
+        {2, 3}, {3, 1},
+        {2, 7}, {3, 5},
+        {2, 11}, {3, 9},
+        {2, 15}, {3, 13},
+        {4, 1}, {5, 3},
+        {4, 5}, {5, 7},
+        {4, 9}, {5, 11},
+        {4, 13}, {5, 15},
+        {6, 3}, {7, 1},
+        {6, 7}, {7, 5},
+        {6, 11}, {7, 9},
+        {6, 15}, {7, 13},
+    };
+    // clang-format on
+
+    std::bitset<CELL_COUNT> initial = get_test_pattern();
+    auto result = execute_rule(initial, rule);
+
+    unsigned test_index = 0;
+    unsigned position = 1;
+    while (position < std::numeric_limits<uint16_t>::max()) {
+        bool expected_alive = (rule & position) != 0;
+        auto cell = test_cells[test_index];
+
+        REQUIRE(result[cell.first * COL_COUNT + cell.second] == expected_alive);
+
+        test_index += 1;
+        if (test_index % 2 == 0) {
+            position *= 2;
+        }
+    }
+}
+
+TEST_CASE("executes all neighbourhood rules correctly", "[execute_rule]") {
+    for (uint16_t rule = std::numeric_limits<uint16_t>::min();
+         rule <= std::numeric_limits<uint16_t>::max(); rule++) {
+        test_pattern_rule_execution(rule);
+    }
 }
