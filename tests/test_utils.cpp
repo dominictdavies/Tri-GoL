@@ -6,8 +6,8 @@ TEST_CASE("gets all neighbourhoods correctly", "[get_neighbourhood]") {
     std::bitset<CELL_COUNT> is_alive;
 
     bool is_up_triangle = (MIDDLE_ROW + MIDDLE_COL) & 1;
-    unsigned left_col = is_up_triangle ? MIDDLE_COL + 1 : MIDDLE_COL - 1;
-    unsigned right_col = is_up_triangle ? MIDDLE_COL - 1 : MIDDLE_COL + 1;
+    unsigned left_col = is_up_triangle ? MIDDLE_COL - 1 : MIDDLE_COL + 1;
+    unsigned right_col = is_up_triangle ? MIDDLE_COL + 1 : MIDDLE_COL - 1;
     unsigned down_row = is_up_triangle ? MIDDLE_ROW + 1 : MIDDLE_ROW - 1;
 
     SECTION("dead-empty neighbourhood is 0") {
