@@ -166,3 +166,32 @@ TEST_CASE("executes extinction rule correctly", "[execute_rule]") {
 TEST_CASE("executes saturation rule correctly", "[execute_rule]") {
     test_extreme_rule_execution(/* is_extinction_rule= */ false);
 }
+
+std::bitset<CELL_COUNT> get_test_pattern() {
+    // clang-format off
+    const char *rows[] = {
+        "00001000001000010",
+        "00000000101001000",
+        "00101110010011101",
+        "10100011100110110",
+        "01001100011001010",
+        "00010001101101010",
+        "00111111010111111",
+        "11100111110111110"
+    };
+    // clang-format on
+
+    constexpr unsigned test_row_count = 8;
+    constexpr unsigned test_col_count = 17;
+
+    std::bitset<CELL_COUNT> test_pattern;
+    for (unsigned row = 0; row < test_row_count; row++) {
+        for (unsigned col = 0; col < test_col_count; col++) {
+            if (rows[row][col] == '1') {
+                test_pattern.set(row * COL_COUNT + col);
+            }
+        }
+    }
+
+    return test_pattern;
+}
