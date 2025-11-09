@@ -3,14 +3,30 @@
 
 uint8_t get_neighbourhood(const std::bitset<CELL_COUNT> &is_alive, unsigned row,
                           unsigned col) {
-    // size_t index = row * COL_COUNT + col;
-    // bool am_alive = is_alive[index];
-    // bool is_up_triangle = (row + col) & 1;
-    // index = (is_up_triangle ? (row + 1) : (row - 1)) * COL_COUNT + col;
-    // bool close_alive = is_alive[index];
-    // index = row * COL_COUNT + 0;
+    size_t index = row * COL_COUNT + col;
 
-    return (uint8_t)0;
+    bool is_up_triangle = (row + col) & 1;
+    bool am_alive = is_alive[index];
+    bool down_alive =
+        is_alive[(is_up_triangle ? (row + 1) : (row - 1)) * COL_COUNT + col];
+    bool left_alive = is_alive[is_up_triangle ? index - 1 : index + 1];
+    bool right_alive = is_alive[is_up_triangle ? index + 1 : index - 1];
+
+    uint8_t neighbourhood = 0;
+    if (left_alive) {
+        neighbourhood += 1;
+    }
+    if (right_alive) {
+        neighbourhood += 2;
+    }
+    if (down_alive) {
+        neighbourhood += 4;
+    }
+    if (am_alive) {
+        neighbourhood += 8;
+    }
+
+    return neighbourhood;
 }
 
 std::bitset<CELL_COUNT> execute_rule(const std::bitset<CELL_COUNT> &is_alive,
