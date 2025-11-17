@@ -2,140 +2,70 @@
 #include <catch2/catch_test_macros.hpp>
 #include <limits>
 
+TEST_CASE("neighbour count index functions correctly",
+          "[neighbour_count_index]") {
+    std::array<unsigned, 16> expected = {0, 1, 2,  4,  3,  5,  6,  7,
+                                         8, 9, 10, 12, 11, 13, 14, 15};
+    for (uint8_t x = 0; x < 16; x++) {
+        REQUIRE(static_cast<unsigned>(neighbour_count_index(x)) == expected[x]);
+    }
+}
+
+TEST_CASE("gets all neighbourhood names correctly",
+          "[get_neighbourhood_name]") {
+    std::array<std::string, 16> expected = {
+        "dead-empty",      "dead-left",      "dead-right",      "dead-down",
+        "dead-left-right", "dead-left-down", "dead-right-down", "dead-full",
+        "live-empty",      "live-left",      "live-right",      "live-down",
+        "live-left-right", "live-left-down", "live-right-down", "live-full"};
+    for (uint8_t neighbourhood = 0; neighbourhood < 16; neighbourhood++) {
+        REQUIRE(get_neighbourhood_name(neighbourhood) ==
+                expected[neighbourhood]);
+    }
+}
+
+void test_get_neighbourhood(unsigned row, unsigned col) {
+    for (uint8_t neighbourhood = 0; neighbourhood < 16; neighbourhood++) {
+        uint8_t rule_index = neighbour_count_index(neighbourhood);
+        std::bitset<CELL_COUNT> is_alive;
+
+        bool is_up_triangle = (row + col) & 1;
+        unsigned left_col = is_up_triangle ? col - 1 : col + 1;
+        unsigned right_col = is_up_triangle ? col + 1 : col - 1;
+        unsigned down_row = is_up_triangle ? row + 1 : row - 1;
+
+        for (unsigned bit_index = 0; bit_index < 4; bit_index++) {
+            bool is_neighbour_alive = rule_index & 1;
+            rule_index >>= 1;
+
+            if (!is_neighbour_alive) {
+                continue;
+            }
+
+            switch (bit_index) {
+            case 0:
+                is_alive.set(row * COL_COUNT + left_col);
+                break;
+            case 1:
+                is_alive.set(row * COL_COUNT + right_col);
+                break;
+            case 2:
+                is_alive.set(down_row * COL_COUNT + col);
+                break;
+            case 3:
+                is_alive.set(row * COL_COUNT + col);
+                break;
+            }
+        }
+
+        REQUIRE(static_cast<unsigned>(get_neighbourhood(is_alive, row, col)) ==
+                neighbourhood);
+    }
+}
+
 TEST_CASE("gets all neighbourhoods correctly", "[get_neighbourhood]") {
-    std::bitset<CELL_COUNT> is_alive;
-
-    bool is_up_triangle = (MIDDLE_ROW + MIDDLE_COL) & 1;
-    unsigned left_col = is_up_triangle ? MIDDLE_COL - 1 : MIDDLE_COL + 1;
-    unsigned right_col = is_up_triangle ? MIDDLE_COL + 1 : MIDDLE_COL - 1;
-    unsigned down_row = is_up_triangle ? MIDDLE_ROW + 1 : MIDDLE_ROW - 1;
-
-    SECTION("dead-empty neighbourhood is 0") {
-        REQUIRE(static_cast<unsigned>(
-                    get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL)) == 0);
-    }
-
-    SECTION("dead-left neighbourhood is 1") {
-        is_alive.set(MIDDLE_ROW * COL_COUNT + left_col);
-
-        REQUIRE(static_cast<unsigned>(
-                    get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL)) == 1);
-    }
-
-    SECTION("dead-right neighbourhood is 2") {
-        is_alive.set(MIDDLE_ROW * COL_COUNT + right_col);
-
-        REQUIRE(static_cast<unsigned>(
-                    get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL)) == 2);
-    }
-
-    SECTION("dead-down neighbourhood is 3") {
-        is_alive.set(down_row * COL_COUNT + MIDDLE_COL);
-
-        REQUIRE(static_cast<unsigned>(
-                    get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL)) == 3);
-    }
-
-    SECTION("dead-left-right neighbourhood is 4") {
-        is_alive.set(MIDDLE_ROW * COL_COUNT + left_col);
-        is_alive.set(MIDDLE_ROW * COL_COUNT + right_col);
-
-        REQUIRE(static_cast<unsigned>(
-                    get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL)) == 4);
-    }
-
-    SECTION("dead-left-down neighbourhood is 5") {
-        is_alive.set(MIDDLE_ROW * COL_COUNT + left_col);
-        is_alive.set(down_row * COL_COUNT + MIDDLE_COL);
-
-        REQUIRE(static_cast<unsigned>(
-                    get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL)) == 5);
-    }
-
-    SECTION("dead-right-down neighbourhood is 6") {
-        is_alive.set(MIDDLE_ROW * COL_COUNT + right_col);
-        is_alive.set(down_row * COL_COUNT + MIDDLE_COL);
-
-        REQUIRE(static_cast<unsigned>(
-                    get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL)) == 6);
-    }
-
-    SECTION("dead-full neighbourhood is 7") {
-        is_alive.set(MIDDLE_ROW * COL_COUNT + left_col);
-        is_alive.set(MIDDLE_ROW * COL_COUNT + right_col);
-        is_alive.set(down_row * COL_COUNT + MIDDLE_COL);
-
-        REQUIRE(static_cast<unsigned>(
-                    get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL)) == 7);
-    }
-
-    SECTION("live-empty neighbourhood is 8") {
-        is_alive.set(MIDDLE_ROW * COL_COUNT + MIDDLE_COL);
-
-        REQUIRE(static_cast<unsigned>(
-                    get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL)) == 8);
-    }
-
-    SECTION("live-left neighbourhood is 9") {
-        is_alive.set(MIDDLE_ROW * COL_COUNT + MIDDLE_COL);
-        is_alive.set(MIDDLE_ROW * COL_COUNT + left_col);
-
-        REQUIRE(static_cast<unsigned>(
-                    get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL)) == 9);
-    }
-
-    SECTION("live-right neighbourhood is 10") {
-        is_alive.set(MIDDLE_ROW * COL_COUNT + MIDDLE_COL);
-        is_alive.set(MIDDLE_ROW * COL_COUNT + right_col);
-
-        REQUIRE(static_cast<unsigned>(
-                    get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL)) == 10);
-    }
-
-    SECTION("live-down neighbourhood is 11") {
-        is_alive.set(MIDDLE_ROW * COL_COUNT + MIDDLE_COL);
-        is_alive.set(down_row * COL_COUNT + MIDDLE_COL);
-
-        REQUIRE(static_cast<unsigned>(
-                    get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL)) == 11);
-    }
-
-    SECTION("live-left-right neighbourhood is 12") {
-        is_alive.set(MIDDLE_ROW * COL_COUNT + MIDDLE_COL);
-        is_alive.set(MIDDLE_ROW * COL_COUNT + left_col);
-        is_alive.set(MIDDLE_ROW * COL_COUNT + right_col);
-
-        REQUIRE(static_cast<unsigned>(
-                    get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL)) == 12);
-    }
-
-    SECTION("live-left-down neighbourhood is 13") {
-        is_alive.set(MIDDLE_ROW * COL_COUNT + MIDDLE_COL);
-        is_alive.set(MIDDLE_ROW * COL_COUNT + left_col);
-        is_alive.set(down_row * COL_COUNT + MIDDLE_COL);
-
-        REQUIRE(static_cast<unsigned>(
-                    get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL)) == 13);
-    }
-
-    SECTION("live-right-down neighbourhood is 14") {
-        is_alive.set(MIDDLE_ROW * COL_COUNT + MIDDLE_COL);
-        is_alive.set(MIDDLE_ROW * COL_COUNT + right_col);
-        is_alive.set(down_row * COL_COUNT + MIDDLE_COL);
-
-        REQUIRE(static_cast<unsigned>(
-                    get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL)) == 14);
-    }
-
-    SECTION("live-full neighbourhood is 15") {
-        is_alive.set(MIDDLE_ROW * COL_COUNT + MIDDLE_COL);
-        is_alive.set(MIDDLE_ROW * COL_COUNT + left_col);
-        is_alive.set(MIDDLE_ROW * COL_COUNT + right_col);
-        is_alive.set(down_row * COL_COUNT + MIDDLE_COL);
-
-        REQUIRE(static_cast<unsigned>(
-                    get_neighbourhood(is_alive, MIDDLE_ROW, MIDDLE_COL)) == 15);
-    }
+    test_get_neighbourhood(MIDDLE_ROW, MIDDLE_COL);
+    test_get_neighbourhood(MIDDLE_ROW + 1, MIDDLE_COL);
 }
 
 void test_rule_execution(const std::bitset<CELL_COUNT> &initial, uint16_t rule,
