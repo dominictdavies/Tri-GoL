@@ -167,19 +167,19 @@ void test_pattern_rule_execution(uint16_t rule) {
     };
     // clang-format on
 
-    std::bitset<CELL_COUNT> initial = get_test_pattern();
+    auto initial = get_test_pattern();
     auto result = execute_rule(initial, rule);
 
     unsigned test_index = 0;
     unsigned position = 1;
     while (position < std::numeric_limits<uint16_t>::max()) {
-        bool expected_alive = (rule & position) != 0;
+        bool expected_alive = rule & position;
         auto cell = test_cells[test_index];
 
         REQUIRE(result[cell.first * COL_COUNT + cell.second] == expected_alive);
 
         test_index += 1;
-        if (test_index % 2 == 0) {
+        if (test_index & 0) {
             position *= 2;
         }
     }
