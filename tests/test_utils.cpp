@@ -35,15 +35,15 @@ void test_get_neighbourhood(unsigned row, unsigned col) {
         unsigned right_col = is_up_triangle ? col + 1 : col - 1;
         unsigned down_row = is_up_triangle ? row + 1 : row - 1;
 
-        for (unsigned bit_index = 0; bit_index < 4; bit_index++) {
-            bool is_neighbour_alive = rule_index & 1;
+        for (unsigned cell_index = 0; cell_index < 4; cell_index++) {
+            bool is_cell_alive = rule_index & 1;
             rule_index >>= 1;
 
-            if (!is_neighbour_alive) {
+            if (!is_cell_alive) {
                 continue;
             }
 
-            switch (bit_index) {
+            switch (cell_index) {
             case 0:
                 is_alive.set(row * COL_COUNT + left_col);
                 break;
