@@ -3,11 +3,12 @@
 #include <limits>
 
 TEST_CASE("neighbour count index functions correctly",
-          "[neighbour_count_index]") {
+          "[neighbourhood_index]") {
     std::array<unsigned, 16> expected = {0, 1, 2,  4,  3,  5,  6,  7,
                                          8, 9, 10, 12, 11, 13, 14, 15};
-    for (uint8_t x = 0; x < 16; x++) {
-        REQUIRE(static_cast<unsigned>(neighbour_count_index(x)) == expected[x]);
+    for (uint8_t neighbourhood = 0; neighbourhood < 16; neighbourhood++) {
+        REQUIRE(static_cast<unsigned>(neighbourhood_index(neighbourhood)) ==
+                expected[neighbourhood]);
     }
 }
 
@@ -26,7 +27,7 @@ TEST_CASE("gets all neighbourhood names correctly",
 
 void test_get_neighbourhood(unsigned row, unsigned col) {
     for (uint8_t neighbourhood = 0; neighbourhood < 16; neighbourhood++) {
-        uint8_t rule_index = neighbour_count_index(neighbourhood);
+        uint8_t rule_index = neighbourhood_index(neighbourhood);
         std::bitset<CELL_COUNT> is_alive;
 
         bool is_up_triangle = (row + col) & 1;

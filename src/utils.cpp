@@ -62,7 +62,7 @@ uint8_t get_neighbourhood(const std::bitset<CELL_COUNT> &is_alive, unsigned row,
         neighbourhood += 8;
     }
 
-    return neighbour_count_index(neighbourhood);
+    return neighbourhood_index(neighbourhood);
 }
 
 std::bitset<CELL_COUNT> execute_rule(const std::bitset<CELL_COUNT> &is_alive,

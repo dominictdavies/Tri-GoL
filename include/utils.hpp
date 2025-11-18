@@ -5,8 +5,8 @@
 #include <bitset>
 #include <cstdint>
 
-constexpr uint8_t neighbour_count_index(uint8_t x) {
-    switch (x) {
+constexpr uint8_t neighbourhood_index(uint8_t neighbourhood) {
+    switch (neighbourhood) {
     case 3:
         return 4;
     case 4:
@@ -16,7 +16,7 @@ constexpr uint8_t neighbour_count_index(uint8_t x) {
     case 12:
         return 11;
     default:
-        return x;
+        return neighbourhood;
     }
 }
 
