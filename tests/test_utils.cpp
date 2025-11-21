@@ -11,19 +11,6 @@ TEST_CASE("neighbour count index functions correctly",
     }
 }
 
-TEST_CASE("gets all neighbourhood names correctly",
-          "[get_neighbourhood_name]") {
-    std::array<std::string, 16> expected = {
-        "dead-empty",      "dead-left",      "dead-right",      "dead-down",
-        "dead-left-right", "dead-left-down", "dead-right-down", "dead-full",
-        "live-empty",      "live-left",      "live-right",      "live-down",
-        "live-left-right", "live-left-down", "live-right-down", "live-full"};
-    for (uint8_t neighbourhood = 0; neighbourhood < 16; neighbourhood++) {
-        REQUIRE(get_neighbourhood_name(neighbourhood) ==
-                expected[neighbourhood]);
-    }
-}
-
 void test_get_neighbourhood(unsigned row, unsigned col) {
     for (uint8_t neighbourhood = 0; neighbourhood < 16; neighbourhood++) {
         uint8_t rule_index = neighbourhood_index(neighbourhood);

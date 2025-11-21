@@ -20,8 +20,6 @@ constexpr uint8_t neighbourhood_index(uint8_t neighbourhood) {
     }
 }
 
-std::string get_neighbourhood_name(uint8_t neighbourhood);
-
 uint8_t get_neighbourhood(const std::bitset<CELL_COUNT> &is_alive, unsigned row,
                           unsigned col);
 
