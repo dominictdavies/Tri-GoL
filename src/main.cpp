@@ -53,15 +53,15 @@ void render_grid() {
     SDL_SetRenderDrawColor(renderer, 64, 64, 64, SDL_ALPHA_OPAQUE);
 
     // Render horizontal lines
-    for (double y = ROW_HEIGHT; y < WINDOW_HEIGHT; y += ROW_HEIGHT) {
-        SDL_RenderLine(renderer, 0, y, WINDOW_WIDTH, y);
+    for (double y = ROW_HEIGHT; y < RENDER_HEIGHT; y += ROW_HEIGHT) {
+        SDL_RenderLine(renderer, 0, y, RENDER_WIDTH, y);
     }
 
     // Render diagonal lines
-    for (double x = -DIAGONAL_LINE_X; x < WINDOW_WIDTH + DIAGONAL_LINE_X;
+    for (double x = -DIAGONAL_LINE_X; x < RENDER_WIDTH + DIAGONAL_LINE_X;
          x += COL_WIDTH) {
-        SDL_RenderLine(renderer, x, 0, x - DIAGONAL_LINE_X, WINDOW_HEIGHT);
-        SDL_RenderLine(renderer, x, 0, x + DIAGONAL_LINE_X, WINDOW_HEIGHT);
+        SDL_RenderLine(renderer, x, 0, x - DIAGONAL_LINE_X, RENDER_HEIGHT);
+        SDL_RenderLine(renderer, x, 0, x + DIAGONAL_LINE_X, RENDER_HEIGHT);
     }
 }
 
@@ -100,13 +100,14 @@ SDL_AppResult SDL_AppInit(void **appstate, int argc, char *argv[]) {
         return SDL_APP_FAILURE;
     }
 
-    if (!SDL_CreateWindowAndRenderer("Tri-GoL", WINDOW_WIDTH, WINDOW_HEIGHT, 0,
-                                     &window, &renderer)) {
+    if (!SDL_CreateWindowAndRenderer("Tri-GoL", RENDER_WIDTH, RENDER_HEIGHT,
+                                     SDL_WINDOW_RESIZABLE, &window,
+                                     &renderer)) {
         SDL_Log("Couldn't create window/renderer: %s", SDL_GetError());
         return SDL_APP_FAILURE;
     }
 
-    SDL_SetRenderLogicalPresentation(renderer, WINDOW_WIDTH, WINDOW_HEIGHT,
+    SDL_SetRenderLogicalPresentation(renderer, RENDER_WIDTH, RENDER_HEIGHT,
                                      SDL_LOGICAL_PRESENTATION_LETTERBOX);
 
     initialise_game_state();
