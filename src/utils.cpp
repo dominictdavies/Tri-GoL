@@ -5,7 +5,7 @@ uint8_t get_neighbourhood(const std::bitset<CELL_COUNT> &is_alive, unsigned row,
                           unsigned col) {
     size_t index = row * COL_COUNT + col;
 
-    bool is_up_triangle = (row + col) & 1;
+    bool is_up_triangle = check_is_up_triangle(row, col);
     bool am_alive = is_alive[index];
     bool down_alive =
         is_alive[(is_up_triangle ? (row + 1) : (row - 1)) * COL_COUNT + col];

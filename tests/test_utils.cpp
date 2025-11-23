@@ -26,7 +26,7 @@ void test_get_neighbourhood(unsigned row, unsigned col) {
         uint8_t rule_index = neighbourhood_index(neighbourhood);
         std::bitset<CELL_COUNT> is_alive;
 
-        bool is_up_triangle = (row + col) & 1;
+        bool is_up_triangle = check_is_up_triangle(row, col);
         unsigned left_col = is_up_triangle ? col - 1 : col + 1;
         unsigned right_col = is_up_triangle ? col + 1 : col - 1;
         unsigned down_row = is_up_triangle ? row + 1 : row - 1;

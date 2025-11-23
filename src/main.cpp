@@ -21,7 +21,7 @@ void initialise_game_state() {
 
 void render_triangle(unsigned row, unsigned col) {
     // Increment row to correct origin for up-triangles
-    bool is_up_triangle = (row + col) & 1;
+    bool is_up_triangle = check_is_up_triangle(row, col);
     if (is_up_triangle) {
         row += 1;
     }
