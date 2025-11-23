@@ -12,9 +12,7 @@ void initialise_game_state() {
     for (unsigned row = 0; row < ROW_COUNT; row++) {
         for (unsigned col = 0; col < COL_COUNT; col++) {
             unsigned index = row * COL_COUNT + col;
-            if (index % 3 == 0) {
-                is_alive.set(index);
-            }
+            is_alive.set(index);
         }
     }
 }
@@ -58,8 +56,11 @@ void render_grid() {
     }
 
     // Render diagonal lines
-    for (double x = -DIAGONAL_LINE_X; x < RENDER_WIDTH + DIAGONAL_LINE_X;
-         x += COL_WIDTH) {
+    double x = -DIAGONAL_LINE_X;
+    if (ROW_COUNT & 1) {
+        x += COL_WIDTH / 2; // Corrects for offset start when row count is odd
+    }
+    for (; x < RENDER_WIDTH + DIAGONAL_LINE_X; x += COL_WIDTH) {
         SDL_RenderLine(renderer, x, 0, x - DIAGONAL_LINE_X, RENDER_HEIGHT);
         SDL_RenderLine(renderer, x, 0, x + DIAGONAL_LINE_X, RENDER_HEIGHT);
     }

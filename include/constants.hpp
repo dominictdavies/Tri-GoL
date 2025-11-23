@@ -8,7 +8,7 @@ constexpr unsigned FPS = 60;
 constexpr unsigned ROW_COUNT = 60;
 constexpr unsigned COL_COUNT = 120;
 constexpr double COL_WIDTH = 16.0;
-constexpr bool SHOW_GRID = true; // TODO: Not working with odd row counts
+constexpr bool SHOW_GRID = true;
 
 // Checks
 static_assert(FPS > 0, "FPS must be larger than 0");
