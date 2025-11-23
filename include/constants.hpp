@@ -10,6 +10,13 @@ constexpr unsigned COL_COUNT = 120;
 constexpr double COL_WIDTH = 16.0;
 constexpr bool SHOW_GRID = true; // TODO: Not working with odd row counts
 
+// Checks
+static_assert(FPS > 0, "FPS must be larger than 0");
+static_assert(ROW_COUNT >= 2, "ROW_COUNT must be at least 2");
+static_assert(COL_COUNT >= 4, "COL_COUNT must be at least 4");
+static_assert(!(COL_COUNT & 1), "COL_COUNT must be even");
+static_assert(COL_WIDTH >= 8.0, "COL_WIDTH must be at least 8.0");
+
 // Derived
 constexpr unsigned FRAME_DELAY = 1e9 / FPS;
 constexpr unsigned CELL_COUNT = ROW_COUNT * COL_COUNT;
