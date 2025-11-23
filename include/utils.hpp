@@ -20,6 +20,10 @@ constexpr uint8_t neighbourhood_index(uint8_t neighbourhood) {
     }
 }
 
+constexpr bool check_is_up_triangle(unsigned row, unsigned col) {
+    return (row + col) & 1;
+}
+
 uint8_t get_neighbourhood(const std::bitset<CELL_COUNT> &is_alive, unsigned row,
                           unsigned col);
 

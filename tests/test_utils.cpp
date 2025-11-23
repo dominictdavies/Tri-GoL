@@ -11,6 +11,16 @@ TEST_CASE("neighbour count index functions correctly",
     }
 }
 
+TEST_CASE("checks if up triangle correctly", "[check_is_up_triangle]") {
+    bool expected = false;
+    for (unsigned row = 0; row < ROW_COUNT; row++) {
+        for (unsigned col = 0; col < COL_COUNT; col++) {
+            REQUIRE(check_is_up_triangle(row, col) == expected);
+            expected = !expected;
+        }
+    }
+}
+
 void test_get_neighbourhood(unsigned row, unsigned col) {
     for (uint8_t neighbourhood = 0; neighbourhood < 16; neighbourhood++) {
         uint8_t rule_index = neighbourhood_index(neighbourhood);
