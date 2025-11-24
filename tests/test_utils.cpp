@@ -23,7 +23,7 @@ TEST_CASE("checks if up triangle correctly", "[check_is_up_triangle]") {
 
 void test_get_neighbourhood(unsigned row, unsigned col) {
     for (uint8_t neighbourhood = 0; neighbourhood < 16; neighbourhood++) {
-        uint8_t rule_index = neighbourhood_index(neighbourhood);
+        uint8_t is_alive_neighbourhood = neighbourhood_index(neighbourhood);
         std::bitset<CELL_COUNT> is_alive;
 
         bool is_up_triangle = check_is_up_triangle(row, col);
@@ -32,8 +32,8 @@ void test_get_neighbourhood(unsigned row, unsigned col) {
         unsigned down_row = is_up_triangle ? row + 1 : row - 1;
 
         for (unsigned cell_index = 0; cell_index < 4; cell_index++) {
-            bool is_cell_alive = rule_index & 1;
-            rule_index >>= 1;
+            bool is_cell_alive = is_alive_neighbourhood & 1;
+            is_alive_neighbourhood >>= 1;
 
             if (!is_cell_alive) {
                 continue;
@@ -61,6 +61,9 @@ void test_get_neighbourhood(unsigned row, unsigned col) {
 }
 
 TEST_CASE("gets all neighbourhoods correctly", "[get_neighbourhood]") {
-    test_get_neighbourhood(MIDDLE_ROW, MIDDLE_COL);
-    test_get_neighbourhood(MIDDLE_ROW + 1, MIDDLE_COL);
+    for (unsigned row = 1; row >= 0; row--) {
+        for (unsigned col = 1; col >= 0; col--) {
+            test_get_neighbourhood(row, col);
+        }
+    }
 }
