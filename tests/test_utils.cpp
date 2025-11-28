@@ -1,6 +1,24 @@
 #include "utils.hpp"
 #include <catch2/catch_test_macros.hpp>
 
+TEST_CASE("modulo functions correctly", "[modulo]") {
+    // Regular
+    CHECK(modulo(0, 120) == 0);
+    CHECK(modulo(1, 120) == 1);
+    CHECK(modulo(60, 120) == 60);
+
+    // Overflow
+    CHECK(modulo(120, 120) == 0);
+    CHECK(modulo(121, 120) == 1);
+    CHECK(modulo(180, 120) == 60);
+    CHECK(modulo(241, 120) == 1);
+
+    // Underflow
+    CHECK(modulo(-1, 120) == 119);
+    CHECK(modulo(-60, 120) == 60);
+    CHECK(modulo(-121, 120) == 119);
+}
+
 TEST_CASE("neighbour count index functions correctly",
           "[neighbourhood_index]") {
     std::array<unsigned, 16> expected = {0, 1, 2,  4,  3,  5,  6,  7,

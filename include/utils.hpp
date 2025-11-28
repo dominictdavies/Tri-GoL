@@ -5,6 +5,11 @@
 #include <bitset>
 #include <cstdint>
 
+constexpr unsigned modulo(int dividend, int modulus) {
+    int remainder = dividend % modulus;
+    return remainder < 0 ? modulus + remainder : remainder;
+}
+
 constexpr uint8_t neighbourhood_index(uint8_t neighbourhood) {
     switch (neighbourhood) {
     case 3:
