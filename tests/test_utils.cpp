@@ -60,15 +60,20 @@ TEST_CASE("gets vertical neighbours correctly", "[get_neighbour]") {
 }
 
 void test_get_neighbourhood(unsigned row, unsigned col) {
+    bool is_up_triangle = check_is_up_triangle(row, col);
+
+    unsigned left_col = is_up_triangle ? col - 1 : col + 1;
+    left_col = modulo(left_col, COL_COUNT);
+
+    unsigned right_col = is_up_triangle ? col + 1 : col - 1;
+    right_col = modulo(right_col, COL_COUNT);
+
+    unsigned down_row = is_up_triangle ? row + 1 : row - 1;
+    down_row = modulo(down_row, ROW_COUNT);
+
     for (uint8_t neighbourhood = 0; neighbourhood < 16; neighbourhood++) {
         uint8_t is_alive_neighbourhood = neighbourhood_index(neighbourhood);
         std::bitset<CELL_COUNT> is_alive;
-
-        bool is_up_triangle = check_is_up_triangle(row, col);
-        unsigned left_col = is_up_triangle ? col - 1 : col + 1;
-        unsigned right_col = is_up_triangle ? col + 1 : col - 1;
-        unsigned down_row = is_up_triangle ? row + 1 : row - 1;
-
         for (unsigned cell_index = 0; cell_index < 4; cell_index++) {
             bool is_cell_alive = is_alive_neighbourhood & 1;
             is_alive_neighbourhood >>= 1;
@@ -93,15 +98,37 @@ void test_get_neighbourhood(unsigned row, unsigned col) {
             }
         }
 
-        REQUIRE(static_cast<unsigned>(get_neighbourhood(is_alive, row, col)) ==
-                neighbourhood);
+        CHECK(static_cast<unsigned>(get_neighbourhood(is_alive, row, col)) ==
+              static_cast<unsigned>(neighbourhood));
     }
 }
 
-TEST_CASE("gets all neighbourhoods correctly", "[get_neighbourhood]") {
-    for (unsigned row = 1; row >= 0; row--) {
-        for (unsigned col = 1; col >= 0; col--) {
-            test_get_neighbourhood(row, col);
-        }
-    }
+TEST_CASE("gets central neighbourhoods correctly", "[get_neighbourhood]") {
+    test_get_neighbourhood(1, 1);
+    test_get_neighbourhood(1, 2);
+    test_get_neighbourhood(2, 1);
+    test_get_neighbourhood(2, 2);
+}
+
+TEST_CASE("gets horizontal edge neighbourhoods correctly",
+          "[get_neighbourhood]") {
+    test_get_neighbourhood(0, 1);
+    test_get_neighbourhood(0, 2);
+    test_get_neighbourhood(ROW_COUNT - 1, 1);
+    test_get_neighbourhood(ROW_COUNT - 1, 2);
+}
+
+TEST_CASE("gets vertical edge neighbourhoods correctly",
+          "[get_neighbourhood]") {
+    test_get_neighbourhood(1, 0);
+    test_get_neighbourhood(2, 0);
+    test_get_neighbourhood(1, COL_COUNT - 1);
+    test_get_neighbourhood(2, COL_COUNT - 1);
+}
+
+TEST_CASE("gets corner neighbourhoods correctly", "[get_neighbourhood]") {
+    test_get_neighbourhood(0, 0);
+    test_get_neighbourhood(0, COL_COUNT - 1);
+    test_get_neighbourhood(ROW_COUNT - 1, 0);
+    test_get_neighbourhood(ROW_COUNT - 1, COL_COUNT - 1);
 }
