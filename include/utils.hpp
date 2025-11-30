@@ -29,6 +29,18 @@ constexpr bool check_is_up_triangle(unsigned row, unsigned col) {
     return (row + col) & 1;
 }
 
+constexpr bool get_neighbour(const std::bitset<CELL_COUNT> &is_alive,
+                             unsigned row, unsigned col, int distance,
+                             bool is_vertical = false) {
+    if (is_vertical) {
+        row = modulo(row + distance, ROW_COUNT);
+    } else {
+        col = modulo(col + distance, COL_COUNT);
+    }
+
+    return is_alive[row * COL_COUNT + col];
+}
+
 uint8_t get_neighbourhood(const std::bitset<CELL_COUNT> &is_alive, unsigned row,
                           unsigned col);
 

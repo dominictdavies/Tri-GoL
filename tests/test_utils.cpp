@@ -39,6 +39,26 @@ TEST_CASE("checks if up triangle correctly", "[check_is_up_triangle]") {
     }
 }
 
+TEST_CASE("gets horizontal neighbours correctly", "[get_neighbour]") {
+    for (int distance = -COL_COUNT; distance < static_cast<int>(COL_COUNT) * 2;
+         distance++) {
+        std::bitset<CELL_COUNT> is_alive;
+        is_alive.set(modulo(distance, COL_COUNT));
+        CAPTURE(distance);
+        CHECK(get_neighbour(is_alive, 0, 0, distance));
+    }
+}
+
+TEST_CASE("gets vertical neighbours correctly", "[get_neighbour]") {
+    for (int distance = -ROW_COUNT; distance < static_cast<int>(ROW_COUNT) * 2;
+         distance++) {
+        std::bitset<CELL_COUNT> is_alive;
+        is_alive.set(modulo(distance, ROW_COUNT) * COL_COUNT);
+        CAPTURE(distance);
+        CHECK(get_neighbour(is_alive, 0, 0, distance, true));
+    }
+}
+
 void test_get_neighbourhood(unsigned row, unsigned col) {
     for (uint8_t neighbourhood = 0; neighbourhood < 16; neighbourhood++) {
         uint8_t is_alive_neighbourhood = neighbourhood_index(neighbourhood);
