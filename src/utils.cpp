@@ -3,14 +3,20 @@
 
 uint8_t get_neighbourhood(const std::bitset<CELL_COUNT> &is_alive, unsigned row,
                           unsigned col) {
-    size_t index = row * COL_COUNT + col;
+    bool am_alive = is_alive[row * COL_COUNT + col];
+
+    unsigned next_col = modulo(col + 1, COL_COUNT);
+    unsigned prev_col = modulo(col - 1, COL_COUNT);
+    unsigned next_row = modulo(row + 1, ROW_COUNT);
+    unsigned prev_row = modulo(row - 1, ROW_COUNT);
 
     bool is_up_triangle = check_is_up_triangle(row, col);
-    bool am_alive = is_alive[index];
+    bool left_alive =
+        is_alive[(is_up_triangle ? prev_col : next_col) + (row * COL_COUNT)];
+    bool right_alive =
+        is_alive[(is_up_triangle ? next_col : prev_col) + (row * COL_COUNT)];
     bool down_alive =
-        is_alive[(is_up_triangle ? (row + 1) : (row - 1)) * COL_COUNT + col];
-    bool left_alive = is_alive[is_up_triangle ? index - 1 : index + 1];
-    bool right_alive = is_alive[is_up_triangle ? index + 1 : index - 1];
+        is_alive[(is_up_triangle ? next_row : prev_row) * COL_COUNT + col];
 
     uint8_t neighbourhood = 0;
     if (left_alive) {
