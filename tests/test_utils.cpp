@@ -24,7 +24,7 @@ TEST_CASE("neighbour count index functions correctly",
     std::array<unsigned, 16> expected = {0, 1, 2,  4,  3,  5,  6,  7,
                                          8, 9, 10, 12, 11, 13, 14, 15};
     for (uint8_t neighbourhood = 0; neighbourhood < 16; neighbourhood++) {
-        REQUIRE(static_cast<unsigned>(neighbourhood_index(neighbourhood)) ==
+        CHECK(static_cast<unsigned>(neighbourhood_index(neighbourhood)) ==
                 expected[neighbourhood]);
     }
 }
@@ -33,6 +33,8 @@ TEST_CASE("checks if up triangle correctly", "[check_is_up_triangle]") {
     bool expected = false;
     for (unsigned row = 0; row < ROW_COUNT; row++) {
         for (unsigned col = 0; col < COL_COUNT; col++) {
+            CAPTURE(row);
+            CAPTURE(col);
             REQUIRE(check_is_up_triangle(row, col) == expected);
             expected = !expected;
         }
