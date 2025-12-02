@@ -3,32 +3,31 @@
 
 uint8_t get_neighbourhood(const std::bitset<CELL_COUNT> &is_alive, unsigned row,
                           unsigned col) {
-    bool am_alive = is_alive[row * COL_COUNT + col];
-
-    unsigned next_col = modulo(col + 1, COL_COUNT);
-    unsigned prev_col = modulo(col - 1, COL_COUNT);
-    unsigned next_row = modulo(row + 1, ROW_COUNT);
-    unsigned prev_row = modulo(row - 1, ROW_COUNT);
-
     bool is_up_triangle = check_is_up_triangle(row, col);
-    bool left_alive =
-        is_alive[(is_up_triangle ? prev_col : next_col) + (row * COL_COUNT)];
-    bool right_alive =
-        is_alive[(is_up_triangle ? next_col : prev_col) + (row * COL_COUNT)];
-    bool down_alive =
-        is_alive[(is_up_triangle ? next_row : prev_row) * COL_COUNT + col];
-
     uint8_t neighbourhood = 0;
-    if (left_alive) {
+
+    bool is_next_col_alive = get_neighbour(is_alive, row, col, 1);
+    bool is_prev_col_alive = get_neighbour(is_alive, row, col, -1);
+    bool is_next_row_alive = get_neighbour(is_alive, row, col, 1, true);
+    bool is_prev_row_alive = get_neighbour(is_alive, row, col, -1, true);
+
+    // Left
+    if (is_up_triangle ? is_prev_col_alive : is_next_col_alive) {
         neighbourhood += 1;
     }
-    if (right_alive) {
+
+    // Right
+    if (is_up_triangle ? is_next_col_alive : is_prev_col_alive) {
         neighbourhood += 2;
     }
-    if (down_alive) {
+
+    // Down
+    if (is_up_triangle ? is_next_row_alive : is_prev_row_alive) {
         neighbourhood += 4;
     }
-    if (am_alive) {
+
+    // Origin
+    if (is_alive[row * COL_COUNT + col]) {
         neighbourhood += 8;
     }
 
