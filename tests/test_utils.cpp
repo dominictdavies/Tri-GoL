@@ -25,7 +25,7 @@ TEST_CASE("neighbour count index functions correctly",
                                          8, 9, 10, 12, 11, 13, 14, 15};
     for (uint8_t neighbourhood = 0; neighbourhood < 16; neighbourhood++) {
         CHECK(static_cast<unsigned>(neighbourhood_index(neighbourhood)) ==
-                expected[neighbourhood]);
+              expected[neighbourhood]);
     }
 }
 
@@ -37,6 +37,22 @@ TEST_CASE("checks if up triangle correctly", "[check_is_up_triangle]") {
             CAPTURE(col);
             REQUIRE(check_is_up_triangle(row, col) == expected);
             expected = !expected;
+        }
+    }
+}
+
+TEST_CASE("gets whether any cell is alive correctly", "[get_is_alive]") {
+    std::bitset<CELL_COUNT> is_alive;
+    for (unsigned row = 0; row < ROW_COUNT; row++) {
+        for (unsigned col = 0; col < COL_COUNT; col++) {
+            CAPTURE(row);
+            CAPTURE(col);
+            if (col & 1) {
+                is_alive.set(row * COL_COUNT + col);
+                REQUIRE(get_is_alive(is_alive, row, col));
+            } else {
+                REQUIRE(!get_is_alive(is_alive, row, col));
+            }
         }
     }
 }
