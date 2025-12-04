@@ -29,13 +29,13 @@ TEST_CASE("neighbour count index functions correctly",
     }
 }
 
-TEST_CASE("checks if up triangle correctly", "[check_is_up_triangle]") {
+TEST_CASE("checks if up triangle correctly", "[get_is_up_triangle]") {
     bool expected = false;
     for (unsigned row = 0; row < ROW_COUNT; row++) {
         for (unsigned col = 0; col < COL_COUNT; col++) {
             CAPTURE(row);
             CAPTURE(col);
-            REQUIRE(check_is_up_triangle(row, col) == expected);
+            REQUIRE(get_is_up_triangle(row, col) == expected);
             expected = !expected;
         }
     }
@@ -78,7 +78,7 @@ TEST_CASE("gets vertical neighbours correctly", "[get_neighbour]") {
 }
 
 void test_get_neighbourhood(unsigned row, unsigned col) {
-    bool is_up_triangle = check_is_up_triangle(row, col);
+    bool is_up_triangle = get_is_up_triangle(row, col);
 
     unsigned left_col = is_up_triangle ? col - 1 : col + 1;
     left_col = modulo(left_col, COL_COUNT);

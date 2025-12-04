@@ -25,8 +25,7 @@ constexpr uint8_t neighbourhood_index(uint8_t neighbourhood) {
     }
 }
 
-// TODO: Rename to `get_is_up_triangle`
-constexpr bool check_is_up_triangle(unsigned row, unsigned col) {
+constexpr bool get_is_up_triangle(unsigned row, unsigned col) {
     return (row + col) & 1;
 }
 
