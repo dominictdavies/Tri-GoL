@@ -41,18 +41,15 @@ TEST_CASE("checks if up triangle correctly", "[get_is_up_triangle]") {
     }
 }
 
-TEST_CASE("gets whether any cell is alive correctly", "[get_is_alive]") {
+TEST_CASE("gets every cell index correctly", "[get_cell_index]") {
     std::bitset<CELL_COUNT> is_alive;
+    unsigned index = 0;
     for (unsigned row = 0; row < ROW_COUNT; row++) {
         for (unsigned col = 0; col < COL_COUNT; col++) {
             CAPTURE(row);
             CAPTURE(col);
-            if (col & 1) {
-                is_alive.set(row * COL_COUNT + col);
-                REQUIRE(get_is_alive(is_alive, row, col));
-            } else {
-                REQUIRE(!get_is_alive(is_alive, row, col));
-            }
+            REQUIRE(get_cell_index(row, col) == index);
+            index += 1;
         }
     }
 }

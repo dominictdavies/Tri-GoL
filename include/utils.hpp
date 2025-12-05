@@ -29,12 +29,9 @@ constexpr bool get_is_up_triangle(unsigned row, unsigned col) {
     return (row + col) & 1;
 }
 
-// TODO: Rename this function or `is_alive`
-// TODO: Make this function return a pointer to the bit address
 // TODO: Use this function everywhere
-constexpr bool get_is_alive(const std::bitset<CELL_COUNT> &is_alive,
-                            unsigned row, unsigned col) {
-    return is_alive[row * COL_COUNT + col];
+constexpr unsigned get_cell_index(unsigned row, unsigned col) {
+    return row * COL_COUNT + col;
 }
 
 constexpr bool get_neighbour(const std::bitset<CELL_COUNT> &is_alive,
