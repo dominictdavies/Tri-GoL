@@ -29,7 +29,7 @@ TEST_CASE("neighbour count index functions correctly",
     }
 }
 
-TEST_CASE("checks if up triangle correctly", "[get_is_up_triangle]") {
+TEST_CASE("gets whether every triangle is up correctly", "[get_is_up_triangle]") {
     bool expected = false;
     for (unsigned row = 0; row < ROW_COUNT; row++) {
         for (unsigned col = 0; col < COL_COUNT; col++) {
@@ -38,11 +38,13 @@ TEST_CASE("checks if up triangle correctly", "[get_is_up_triangle]") {
             REQUIRE(get_is_up_triangle(row, col) == expected);
             expected = !expected;
         }
+        // Rows alternate is_up_triangle order
+        expected = !expected;
     }
 }
 
-// TODO: Make `get_cell_index` function with modulo
-// TODO: Use `get_cell_index` instead of `get_neighbour`
+// TODO: Make get_cell_index function with modulo
+// TODO: Use get_cell_index instead of get_neighbour
 TEST_CASE("gets every cell index correctly", "[get_cell_index]") {
     std::bitset<CELL_COUNT> is_alive;
     unsigned index = 0;
