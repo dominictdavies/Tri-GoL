@@ -41,6 +41,8 @@ TEST_CASE("checks if up triangle correctly", "[get_is_up_triangle]") {
     }
 }
 
+// TODO: Make `get_cell_index` function with modulo
+// TODO: Use `get_cell_index` instead of `get_neighbour`
 TEST_CASE("gets every cell index correctly", "[get_cell_index]") {
     std::bitset<CELL_COUNT> is_alive;
     unsigned index = 0;
@@ -68,7 +70,7 @@ TEST_CASE("gets vertical neighbours correctly", "[get_neighbour]") {
     for (int distance = -ROW_COUNT; distance < static_cast<int>(ROW_COUNT) * 2;
          distance++) {
         std::bitset<CELL_COUNT> is_alive;
-        is_alive.set(modulo(distance, ROW_COUNT) * COL_COUNT);
+        is_alive.set(get_cell_index(modulo(distance, ROW_COUNT), 0));
         CAPTURE(distance);
         CHECK(get_neighbour(is_alive, 0, 0, distance, true));
     }
@@ -99,16 +101,16 @@ void test_get_neighbourhood(unsigned row, unsigned col) {
 
             switch (cell_index) {
             case 0:
-                is_alive.set(row * COL_COUNT + left_col);
+                is_alive.set(get_cell_index(row, left_col));
                 break;
             case 1:
-                is_alive.set(row * COL_COUNT + right_col);
+                is_alive.set(get_cell_index(row, right_col));
                 break;
             case 2:
-                is_alive.set(down_row * COL_COUNT + col);
+                is_alive.set(get_cell_index(down_row, col));
                 break;
             case 3:
-                is_alive.set(row * COL_COUNT + col);
+                is_alive.set(get_cell_index(row, col));
                 break;
             }
         }

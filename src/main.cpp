@@ -11,8 +11,7 @@ static SDL_Renderer *renderer = nullptr;
 void initialise_game_state() {
     for (unsigned row = 0; row < ROW_COUNT; row++) {
         for (unsigned col = 0; col < COL_COUNT; col++) {
-            unsigned index = row * COL_COUNT + col;
-            is_alive.set(index);
+            is_alive.set(get_cell_index(row, col));
         }
     }
 }
@@ -74,8 +73,7 @@ void render_frame() {
     // Render the triangles
     for (unsigned row = 0; row < ROW_COUNT; row++) {
         for (unsigned col = 0; col < COL_COUNT; col++) {
-            size_t index = row * COL_COUNT + col;
-            if (is_alive[index]) {
+            if (is_alive[get_cell_index(row, col)]) {
                 render_triangle(row, col);
             }
         }

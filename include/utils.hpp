@@ -29,7 +29,6 @@ constexpr bool get_is_up_triangle(unsigned row, unsigned col) {
     return (row + col) & 1;
 }
 
-// TODO: Use this function everywhere
 constexpr unsigned get_cell_index(unsigned row, unsigned col) {
     return row * COL_COUNT + col;
 }
@@ -43,7 +42,7 @@ constexpr bool get_neighbour(const std::bitset<CELL_COUNT> &is_alive,
         col = modulo(col + distance, COL_COUNT);
     }
 
-    return is_alive[row * COL_COUNT + col];
+    return is_alive[get_cell_index(row, col)];
 }
 
 uint8_t get_neighbourhood(const std::bitset<CELL_COUNT> &is_alive, unsigned row,

@@ -27,7 +27,7 @@ uint8_t get_neighbourhood(const std::bitset<CELL_COUNT> &is_alive, unsigned row,
     }
 
     // Origin
-    if (is_alive[row * COL_COUNT + col]) {
+    if (is_alive[get_cell_index(row, col)]) {
         neighbourhood += 8;
     }
 
