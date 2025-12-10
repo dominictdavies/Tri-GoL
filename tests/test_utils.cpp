@@ -29,7 +29,8 @@ TEST_CASE("neighbour count index functions correctly",
     }
 }
 
-TEST_CASE("gets whether every triangle is up correctly", "[get_is_up_triangle]") {
+TEST_CASE("gets whether every triangle is up correctly",
+          "[get_is_up_triangle]") {
     bool expected = false;
     for (unsigned row = 0; row < ROW_COUNT; row++) {
         for (unsigned col = 0; col < COL_COUNT; col++) {
@@ -43,13 +44,12 @@ TEST_CASE("gets whether every triangle is up correctly", "[get_is_up_triangle]")
     }
 }
 
-// TODO: Make get_cell_index function with modulo
-// TODO: Use get_cell_index instead of get_neighbour
-TEST_CASE("gets every cell index correctly", "[get_cell_index]") {
-    std::bitset<CELL_COUNT> is_alive;
+void test_get_cell_index_in_quadrant(int quadrant_row, int quadrant_col) {
     unsigned index = 0;
-    for (unsigned row = 0; row < ROW_COUNT; row++) {
-        for (unsigned col = 0; col < COL_COUNT; col++) {
+    for (int row = quadrant_row * ROW_COUNT;
+         row < (quadrant_row + 1) * ROW_COUNT; row++) {
+        for (int col = quadrant_col * COL_COUNT;
+             col < (quadrant_col + 1) * COL_COUNT; col++) {
             CAPTURE(row);
             CAPTURE(col);
             REQUIRE(get_cell_index(row, col) == index);
@@ -58,23 +58,20 @@ TEST_CASE("gets every cell index correctly", "[get_cell_index]") {
     }
 }
 
-TEST_CASE("gets horizontal neighbours correctly", "[get_neighbour]") {
-    for (int distance = -COL_COUNT; distance < static_cast<int>(COL_COUNT) * 2;
-         distance++) {
-        std::bitset<CELL_COUNT> is_alive;
-        is_alive.set(modulo(distance, COL_COUNT));
-        CAPTURE(distance);
-        CHECK(get_neighbour(is_alive, 0, 0, distance));
-    }
+// TODO: Use get_cell_index instead of get_neighbour
+TEST_CASE("gets inside cell indexes correctly", "[get_cell_index]") {
+    test_get_cell_index_in_quadrant(0, 0);
 }
 
-TEST_CASE("gets vertical neighbours correctly", "[get_neighbour]") {
-    for (int distance = -ROW_COUNT; distance < static_cast<int>(ROW_COUNT) * 2;
-         distance++) {
-        std::bitset<CELL_COUNT> is_alive;
-        is_alive.set(get_cell_index(modulo(distance, ROW_COUNT), 0));
-        CAPTURE(distance);
-        CHECK(get_neighbour(is_alive, 0, 0, distance, true));
+TEST_CASE("gets outside cell indexes correctly", "[get_cell_index]") {
+    for (int quadrant_row = -2; quadrant_row <= 2; quadrant_row++) {
+        for (int quadrant_col = -2; quadrant_col <= 2; quadrant_col++) {
+            if (quadrant_row == 0 && quadrant_col == 0) {
+                continue;
+            }
+
+            test_get_cell_index_in_quadrant(quadrant_row, quadrant_col);
+        }
     }
 }
 
