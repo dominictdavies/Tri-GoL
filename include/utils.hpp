@@ -36,18 +36,6 @@ constexpr unsigned get_cell_index(int row, int col) {
     return row * COL_COUNT + col;
 }
 
-constexpr bool get_neighbour(const std::bitset<CELL_COUNT> &is_alive,
-                             unsigned row, unsigned col, int distance,
-                             bool is_vertical = false) {
-    if (is_vertical) {
-        row = modulo(row + distance, ROW_COUNT);
-    } else {
-        col = modulo(col + distance, COL_COUNT);
-    }
-
-    return is_alive[get_cell_index(row, col)];
-}
-
 uint8_t get_neighbourhood(const std::bitset<CELL_COUNT> &is_alive, unsigned row,
                           unsigned col);
 

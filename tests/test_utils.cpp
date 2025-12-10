@@ -58,7 +58,6 @@ void test_get_cell_index_in_quadrant(int quadrant_row, int quadrant_col) {
     }
 }
 
-// TODO: Use get_cell_index instead of get_neighbour
 TEST_CASE("gets inside cell indexes correctly", "[get_cell_index]") {
     test_get_cell_index_in_quadrant(0, 0);
 }
