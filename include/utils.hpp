@@ -29,10 +29,9 @@ constexpr bool get_is_up_triangle(unsigned row, unsigned col) {
     return (row + col) & 1;
 }
 
-// TODO: Find a better name for row and col when they are ints
-constexpr unsigned get_cell_index(int row, int col) {
-    row = modulo(row, ROW_COUNT);
-    col = modulo(col, COL_COUNT);
+constexpr unsigned get_cell_index(int x, int y) {
+    unsigned row = modulo(y, ROW_COUNT);
+    unsigned col = modulo(x, COL_COUNT);
     return row * COL_COUNT + col;
 }
 

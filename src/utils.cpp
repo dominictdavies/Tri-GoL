@@ -6,10 +6,10 @@ uint8_t get_neighbourhood(const std::bitset<CELL_COUNT> &is_alive, unsigned row,
     bool is_up_triangle = get_is_up_triangle(row, col);
     uint8_t neighbourhood = 0;
 
-    bool is_next_col_alive = is_alive[get_cell_index(row, col + 1)];
-    bool is_prev_col_alive = is_alive[get_cell_index(row, col - 1)];
-    bool is_next_row_alive = is_alive[get_cell_index(row + 1, col)];
-    bool is_prev_row_alive = is_alive[get_cell_index(row - 1, col)];
+    bool is_next_col_alive = is_alive[get_cell_index(col + 1, row)];
+    bool is_prev_col_alive = is_alive[get_cell_index(col - 1, row)];
+    bool is_next_row_alive = is_alive[get_cell_index(col, row + 1)];
+    bool is_prev_row_alive = is_alive[get_cell_index(col, row - 1)];
 
     // Left
     if (is_up_triangle ? is_prev_col_alive : is_next_col_alive) {
@@ -27,7 +27,7 @@ uint8_t get_neighbourhood(const std::bitset<CELL_COUNT> &is_alive, unsigned row,
     }
 
     // Origin
-    if (is_alive[get_cell_index(row, col)]) {
+    if (is_alive[get_cell_index(col, row)]) {
         neighbourhood += 8;
     }
 

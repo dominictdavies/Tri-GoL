@@ -44,15 +44,15 @@ TEST_CASE("gets whether every triangle is up correctly",
     }
 }
 
-void test_get_cell_index_in_quadrant(int quadrant_row, int quadrant_col) {
+void test_get_cell_index_in_quadrant(int quadrant_x, int quadrant_y) {
     unsigned index = 0;
-    for (int row = quadrant_row * ROW_COUNT;
-         row < (quadrant_row + 1) * ROW_COUNT; row++) {
-        for (int col = quadrant_col * COL_COUNT;
-             col < (quadrant_col + 1) * COL_COUNT; col++) {
-            CAPTURE(row);
-            CAPTURE(col);
-            REQUIRE(get_cell_index(row, col) == index);
+    int y = quadrant_y * ROW_COUNT;
+    for (; y < (quadrant_y + 1) * ROW_COUNT; y++) {
+        int x = quadrant_x * COL_COUNT;
+        for (; x < (quadrant_x + 1) * COL_COUNT; x++) {
+            CAPTURE(x);
+            CAPTURE(y);
+            REQUIRE(get_cell_index(x, y) == index);
             index += 1;
         }
     }
@@ -63,13 +63,13 @@ TEST_CASE("gets inside cell indexes correctly", "[get_cell_index]") {
 }
 
 TEST_CASE("gets outside cell indexes correctly", "[get_cell_index]") {
-    for (int quadrant_row = -2; quadrant_row <= 2; quadrant_row++) {
-        for (int quadrant_col = -2; quadrant_col <= 2; quadrant_col++) {
-            if (quadrant_row == 0 && quadrant_col == 0) {
+    for (int quadrant_y = -2; quadrant_y <= 2; quadrant_y++) {
+        for (int quadrant_x = -2; quadrant_x <= 2; quadrant_x++) {
+            if (quadrant_x == 0 && quadrant_y == 0) {
                 continue;
             }
 
-            test_get_cell_index_in_quadrant(quadrant_row, quadrant_col);
+            test_get_cell_index_in_quadrant(quadrant_x, quadrant_y);
         }
     }
 }
@@ -99,16 +99,16 @@ void test_get_neighbourhood(unsigned row, unsigned col) {
 
             switch (cell_index) {
             case 0:
-                is_alive.set(get_cell_index(row, left_col));
+                is_alive.set(get_cell_index(left_col, row));
                 break;
             case 1:
-                is_alive.set(get_cell_index(row, right_col));
+                is_alive.set(get_cell_index(right_col, row));
                 break;
             case 2:
-                is_alive.set(get_cell_index(down_row, col));
+                is_alive.set(get_cell_index(col, down_row));
                 break;
             case 3:
-                is_alive.set(get_cell_index(row, col));
+                is_alive.set(get_cell_index(col, row));
                 break;
             }
         }
